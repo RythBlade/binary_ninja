@@ -70,6 +70,12 @@
     <Compile Include="Attributes\PropertySpecConverter.cs" />
     <Compile Include="Attributes\PropertySpecPropertyDescripton.cs" />
     <Compile Include="Attributes\StructSpecConverter.cs" />
+    <Compile Include="LoadingDialogue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoadingDialogue.Designer.cs">
+      <DependentUpon>LoadingDialogue.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,6 +91,12 @@
     <Compile Include="Spec\PropertySpec.cs" />
     <Compile Include="Spec\StructSpec.cs" />
     <Compile Include="Spec\ValueSpec.cs" />
+    <Compile Include="Threading\ParserPayload.cs" />
+    <Compile Include="Threading\ScriptFilePayLoad.cs" />
+    <Compile Include="Threading\TargetFileLoadPayLoad.cs" />
+    <EmbeddedResource Include="LoadingDialogue.resx">
+      <DependentUpon>LoadingDialogue.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>

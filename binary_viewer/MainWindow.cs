@@ -1,5 +1,6 @@
 ﻿using binary_viewer.Script;
 using binary_viewer.Spec;
+using binary_viewer.Threading;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -16,6 +17,7 @@ namespace binary_viewer
 
         private string m_loadedSpecFileName;
         private string m_loadedTargetFileName;
+        private LoadingDialogue m_newLoadingDialogue;
 
         public MainWindow()
         {
@@ -24,11 +26,17 @@ namespace binary_viewer
             m_targetFileBuffer = null;
             m_loadedSpecFileName = string.Empty;
             m_loadedTargetFileName = string.Empty;
-
+            
             // setup the window text
             Text = "Binary Ninja";
 
             InitializeComponent();
+        }
+
+        private void newLoadingDialogue_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            m_newLoadingDialogue = null;
+            MainMenuStrip.Enabled = true;
         }
 
         private void openFileSpecMenuItem_Click(object sender, EventArgs e)
@@ -197,15 +205,12 @@ namespace binary_viewer
         {
             if (!string.IsNullOrEmpty(m_loadedTargetFileName))
             {
-                using (FileStream fileStream = File.OpenRead(m_loadedTargetFileName))
-                {
-                    m_targetFileBuffer = new byte[fileStream.Length];
-                    fileStream.Read(m_targetFileBuffer, 0, m_targetFileBuffer.Length);
-                }
+                TargetFileLoadPayLoad targetFilePayload = new TargetFileLoadPayLoad();
+                targetFilePayload.TargetFileName = m_loadedTargetFileName;
                 
-                WriteMessageToErrorOutputWindow($"Opened target file: {m_loadedTargetFileName}");
+                ShowLoadingDialogue("Loading target file...");
 
-                FinaliseLoad();
+                backgroundWorker.RunWorkerAsync(targetFilePayload);
             }
             else
             {
@@ -220,14 +225,12 @@ namespace binary_viewer
             {
                 m_scriptBuffer = string.Empty;
 
-                using (StreamReader newFile = File.OpenText(m_loadedSpecFileName))
-                {
-                    m_scriptBuffer = newFile.ReadToEnd();
-                }
+                ScriptFilePayLoad scriptPayload = new ScriptFilePayLoad();
+                scriptPayload.ScriptFileName = m_loadedSpecFileName;
                 
-                WriteMessageToErrorOutputWindow($"Opened script file: {m_loadedSpecFileName}");
+                ShowLoadingDialogue("Loading script file...");
 
-                FinaliseLoad();
+                backgroundWorker.RunWorkerAsync(scriptPayload);
             }
             else
             {
@@ -239,26 +242,18 @@ namespace binary_viewer
         private void FinaliseLoad()
         {
             Text = $"Binar Ninja - [Target File: {Path.GetFileName(m_loadedTargetFileName)}] - [Target Script: {Path.GetFileName(m_loadedSpecFileName)}]";
-
+            
             if (m_targetFileBuffer != null && !string.IsNullOrEmpty(m_loadedSpecFileName))
             {
-                ScriptConsumer consumer = null;
-
                 //try
                 {
-                    // create everything!
-                    m_fileSpec = new FileSpec(m_targetFileBuffer, 0);
-                    consumer = new ScriptConsumer(m_scriptBuffer, m_fileSpec);
+                    FileSpec fileSpec = new FileSpec(m_targetFileBuffer, 0);
+                    ScriptConsumer consumer = new ScriptConsumer(m_scriptBuffer, fileSpec);
+                    ParserPayload workerPayload = new ParserPayload(fileSpec, consumer);
 
-                    // this is where the magic happens - read the script and create a view onto the file!
-                    consumer.ParseScript();
+                    ShowLoadingDialogue("Parsing the file...");
 
-                    // output the results of the script!
-                    outputWindowTextBox.Text = m_fileSpec.PrintFile();
-                    fileDisplayPropertyGrid.SelectedObject = m_fileSpec;
-                    scriptViewTextBox.Text = m_scriptBuffer;
-
-                    WriteMessageToErrorOutputWindow(consumer.ErrorOutput);
+                    backgroundWorker.RunWorkerAsync(workerPayload);
                 }
                 /*catch (Exception ex)
                 {
@@ -279,6 +274,147 @@ namespace binary_viewer
         private void WriteMessageToErrorOutputWindow(string stringToWrite)
         {
             consoleOutputWindow.Text += stringToWrite + "\n";
+        }
+
+        private void showSpinnerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+//             if (m_targetFileBuffer != null && !string.IsNullOrEmpty(m_loadedSpecFileName))
+//             {
+//                 ShowLoadingDialogue
+// 
+//                 FileSpec fileSpec = new FileSpec(m_targetFileBuffer, 0);
+//                 ScriptConsumer consumer = new ScriptConsumer(m_scriptBuffer, fileSpec);
+//                 ParserPayload workerPayload = new ParserPayload(fileSpec, consumer);
+// 
+//                 m_newLoadingDialogue.Show(this);
+// 
+//                 backgroundWorker.RunWorkerAsync(workerPayload);
+//             }
+//             else
+//             {
+//                 MessageBox.Show("Some error");
+//             }
+        }
+
+        private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            ParserPayload parserPayload = e.Argument as ParserPayload;
+            ScriptFilePayLoad scriptFilePayload = e.Argument as ScriptFilePayLoad;
+            TargetFileLoadPayLoad targetFilePayload = e.Argument as TargetFileLoadPayLoad;
+
+            if (parserPayload != null)
+            {
+                //try
+                {
+                    // this is where the magic happens - read the script and create a view onto the file!
+                    parserPayload.ScriptConsumerToUse.ParseScript();
+
+                    e.Result = parserPayload;
+                }
+                /*catch (Exception ex)
+                {
+                    if (consumer != null)
+                    {
+                        WriteMessageToErrorOutputWindow(consumer.ErrorOutput);
+                    }
+    #if DEBUG
+                    throw ex;
+    #else
+                    WriteMessageToErrorOutputWindow($"Ok...there was an exception parsing the script file: {ex.Message}");
+                    MessageBox.Show($"Ok...there was an exception parsing the script file: {ex.Message}");
+    #endif
+                }*/
+            }
+            else if (scriptFilePayload != null)
+            {
+                using (StreamReader newFile = File.OpenText(scriptFilePayload.ScriptFileName))
+                {
+                    scriptFilePayload.ScriptBuffer = newFile.ReadToEnd();
+                    e.Result = scriptFilePayload;
+                }
+            }
+            else if (targetFilePayload != null)
+            {
+                using (FileStream fileStream = File.OpenRead(targetFilePayload.TargetFileName))
+                {
+                    targetFilePayload.TargetFileBuffer = new byte[fileStream.Length];
+                    fileStream.Read(targetFilePayload.TargetFileBuffer, 0, targetFilePayload.TargetFileBuffer.Length);
+                    e.Result = targetFilePayload;
+                }
+            }
+            
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            ParserPayload parserPayload = e.Result as ParserPayload;
+            ScriptFilePayLoad scriptFilePayload = e.Result as ScriptFilePayLoad;
+            TargetFileLoadPayLoad targetFilePayload = e.Result as TargetFileLoadPayLoad;
+
+            if (parserPayload != null)
+            {
+                // output the results of the script!
+                m_fileSpec = parserPayload.FileSpecToPopulate;
+                outputWindowTextBox.Text = parserPayload.FileSpecToPopulate.PrintFile();
+                fileDisplayPropertyGrid.SelectedObject = parserPayload.FileSpecToPopulate;
+                scriptViewTextBox.Text = m_scriptBuffer;
+
+                WriteMessageToErrorOutputWindow(parserPayload.ScriptConsumerToUse.ErrorOutput);
+            }
+            else if (scriptFilePayload != null)
+            {
+                m_scriptBuffer = scriptFilePayload.ScriptBuffer;
+
+                WriteMessageToErrorOutputWindow($"Opened script file: {scriptFilePayload.ScriptFileName}");
+
+                FinaliseLoad();
+            }
+            else if (targetFilePayload != null)
+            {
+                m_targetFileBuffer = targetFilePayload.TargetFileBuffer;
+
+                WriteMessageToErrorOutputWindow($"Opened target file: {targetFilePayload.TargetFileName}");
+                FinaliseLoad();
+            }
+            else
+            {
+                m_fileSpec = null;
+                outputWindowTextBox.Text = string.Empty;
+                fileDisplayPropertyGrid.SelectedObject = null;
+                scriptViewTextBox.Text = string.Empty;
+
+                WriteMessageToErrorOutputWindow("It went really wrong!");
+            }
+
+            HideLoadingDialogue();
+        }
+
+        private void ShowLoadingDialogue(string loadingMessage)
+        {
+            if (m_newLoadingDialogue != null)
+            {
+                m_newLoadingDialogue.CancelCloseLoading();
+                m_newLoadingDialogue.LoadingText = loadingMessage;
+            }
+            else
+            {
+                m_newLoadingDialogue = new LoadingDialogue();
+                m_newLoadingDialogue.FormClosed += newLoadingDialogue_FormClosed;
+
+                m_newLoadingDialogue.LoadingText = loadingMessage;
+
+                MainMenuStrip.Enabled = false;
+
+                m_newLoadingDialogue.Show(this);
+            }
+        }
+
+        private void HideLoadingDialogue()
+        {
+            if (m_newLoadingDialogue != null)
+            {
+                m_newLoadingDialogue.TriggerCloseLoading();
+            }
         }
     }
 }

@@ -36,6 +36,7 @@
             this.refreshDataMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugButtonsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toHardCodedTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.writeTestItemMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileSpecOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
             this.targetFileOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
             this.saveTestFileDialogue = new System.Windows.Forms.SaveFileDialog();
@@ -48,7 +49,8 @@
             this.scriptDisplayTabPage = new System.Windows.Forms.TabPage();
             this.scriptViewTextBox = new System.Windows.Forms.RichTextBox();
             this.consoleOutputWindow = new System.Windows.Forms.RichTextBox();
-            this.writeTestItemMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showSpinnerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.maintMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -106,7 +108,8 @@
             // 
             this.debugButtonsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toHardCodedTestToolStripMenuItem,
-            this.writeTestItemMenuItem});
+            this.writeTestItemMenuItem,
+            this.showSpinnerToolStripMenuItem});
             this.debugButtonsToolStripMenuItem.Name = "debugButtonsToolStripMenuItem";
             this.debugButtonsToolStripMenuItem.Size = new System.Drawing.Size(98, 20);
             this.debugButtonsToolStripMenuItem.Text = "Debug Buttons";
@@ -117,6 +120,13 @@
             this.toHardCodedTestToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.toHardCodedTestToolStripMenuItem.Text = "To Hard Coded Test...";
             this.toHardCodedTestToolStripMenuItem.Click += new System.EventHandler(this.toHardCodedTestToolStripMenuItem_Click_1);
+            // 
+            // writeTestItemMenuItem
+            // 
+            this.writeTestItemMenuItem.Name = "writeTestItemMenuItem";
+            this.writeTestItemMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.writeTestItemMenuItem.Text = "Write Test Item...";
+            this.writeTestItemMenuItem.Click += new System.EventHandler(this.writeTestItemMenuItem_Click_1);
             // 
             // fileSpecOpenFileDialogue
             // 
@@ -238,12 +248,17 @@
             this.consoleOutputWindow.TabIndex = 0;
             this.consoleOutputWindow.Text = "";
             // 
-            // writeTestItemMenuItem
+            // showSpinnerToolStripMenuItem
             // 
-            this.writeTestItemMenuItem.Name = "writeTestItemMenuItem";
-            this.writeTestItemMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.writeTestItemMenuItem.Text = "Write Test Item...";
-            this.writeTestItemMenuItem.Click += new System.EventHandler(this.writeTestItemMenuItem_Click_1);
+            this.showSpinnerToolStripMenuItem.Name = "showSpinnerToolStripMenuItem";
+            this.showSpinnerToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.showSpinnerToolStripMenuItem.Text = "Show Spinner";
+            this.showSpinnerToolStripMenuItem.Click += new System.EventHandler(this.showSpinnerToolStripMenuItem_Click);
+            // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
             // MainWindow
             // 
@@ -292,6 +307,8 @@
         private System.Windows.Forms.ToolStripMenuItem debugButtonsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toHardCodedTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem writeTestItemMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showSpinnerToolStripMenuItem;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
     }
 }
 
