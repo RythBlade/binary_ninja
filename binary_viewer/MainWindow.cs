@@ -14,6 +14,7 @@ namespace binary_viewer
         private string m_scriptBuffer;
 
         private byte[] m_targetFileBuffer;
+        private bool m_shouldUpdateUIData;
 
         private string m_loadedSpecFileName;
         private string m_loadedTargetFileName;
@@ -26,7 +27,8 @@ namespace binary_viewer
             m_targetFileBuffer = null;
             m_loadedSpecFileName = string.Empty;
             m_loadedTargetFileName = string.Empty;
-            
+            m_shouldUpdateUIData = true;
+
             // setup the window text
             Text = "Binary Ninja";
 
@@ -210,7 +212,9 @@ namespace binary_viewer
                 
                 ShowLoadingDialogue("Loading target file...");
 
-                backgroundWorker.RunWorkerAsync(targetFilePayload);
+                m_shouldUpdateUIData = true;
+
+                targetFileLoad_backgroundWorker.RunWorkerAsync(targetFilePayload);
             }
             else
             {
@@ -230,7 +234,9 @@ namespace binary_viewer
                 
                 ShowLoadingDialogue("Loading script file...");
 
-                backgroundWorker.RunWorkerAsync(scriptPayload);
+                m_shouldUpdateUIData = true;
+
+                targetSpecLoad_backgroundWorker.RunWorkerAsync(scriptPayload);
             }
             else
             {
@@ -241,59 +247,44 @@ namespace binary_viewer
 
         private void FinaliseLoad()
         {
-            Text = $"Binar Ninja - [Target File: {Path.GetFileName(m_loadedTargetFileName)}] - [Target Script: {Path.GetFileName(m_loadedSpecFileName)}]";
-            
-            if (m_targetFileBuffer != null && !string.IsNullOrEmpty(m_loadedSpecFileName))
+            if(m_shouldUpdateUIData)
             {
-                //try
-                {
-                    FileSpec fileSpec = new FileSpec(m_targetFileBuffer, 0);
-                    ScriptConsumer consumer = new ScriptConsumer(m_scriptBuffer, fileSpec);
-                    ParserPayload workerPayload = new ParserPayload(fileSpec, consumer);
+                Text = $"Binar Ninja - [Target File: {Path.GetFileName(m_loadedTargetFileName)}] - [Target Script: {Path.GetFileName(m_loadedSpecFileName)}]";
 
-                    ShowLoadingDialogue("Parsing the file...");
-
-                    backgroundWorker.RunWorkerAsync(workerPayload);
-                }
-                /*catch (Exception ex)
+                if (m_targetFileBuffer != null && m_scriptBuffer != null)
                 {
-                    if (consumer != null)
+                    m_shouldUpdateUIData = false;
+
+                    //try
                     {
-                        WriteMessageToErrorOutputWindow(consumer.ErrorOutput);
+                        FileSpec fileSpec = new FileSpec(m_targetFileBuffer, 0);
+                        ScriptConsumer consumer = new ScriptConsumer(m_scriptBuffer, fileSpec);
+                        ParserPayload workerPayload = new ParserPayload(fileSpec, consumer);
+
+                        ShowLoadingDialogue("Parsing the file...");
+
+                        finalise_backgroundWorker.RunWorkerAsync(workerPayload);
                     }
-#if DEBUG
-                    throw ex;
-#else
-                    WriteMessageToErrorOutputWindow($"Ok...there was an exception parsing the script file: {ex.Message}");
-                    MessageBox.Show($"Ok...there was an exception parsing the script file: {ex.Message}");
-#endif
-                }*/
+                    /*catch (Exception ex)
+                    {
+                        if (consumer != null)
+                        {
+                            WriteMessageToErrorOutputWindow(consumer.ErrorOutput);
+                        }
+    #if DEBUG
+                        throw ex;
+    #else
+                        WriteMessageToErrorOutputWindow($"Ok...there was an exception parsing the script file: {ex.Message}");
+                        MessageBox.Show($"Ok...there was an exception parsing the script file: {ex.Message}");
+    #endif
+                    }*/
+                }
             }
         }
 
         private void WriteMessageToErrorOutputWindow(string stringToWrite)
         {
             consoleOutputWindow.Text += stringToWrite + "\n";
-        }
-
-        private void showSpinnerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-//             if (m_targetFileBuffer != null && !string.IsNullOrEmpty(m_loadedSpecFileName))
-//             {
-//                 ShowLoadingDialogue
-// 
-//                 FileSpec fileSpec = new FileSpec(m_targetFileBuffer, 0);
-//                 ScriptConsumer consumer = new ScriptConsumer(m_scriptBuffer, fileSpec);
-//                 ParserPayload workerPayload = new ParserPayload(fileSpec, consumer);
-// 
-//                 m_newLoadingDialogue.Show(this);
-// 
-//                 backgroundWorker.RunWorkerAsync(workerPayload);
-//             }
-//             else
-//             {
-//                 MessageBox.Show("Some error");
-//             }
         }
 
         private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)

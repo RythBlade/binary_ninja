@@ -49,8 +49,9 @@
             this.scriptDisplayTabPage = new System.Windows.Forms.TabPage();
             this.scriptViewTextBox = new System.Windows.Forms.RichTextBox();
             this.consoleOutputWindow = new System.Windows.Forms.RichTextBox();
-            this.showSpinnerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.targetFileLoad_backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.targetSpecLoad_backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.finalise_backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.maintMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -108,8 +109,7 @@
             // 
             this.debugButtonsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toHardCodedTestToolStripMenuItem,
-            this.writeTestItemMenuItem,
-            this.showSpinnerToolStripMenuItem});
+            this.writeTestItemMenuItem});
             this.debugButtonsToolStripMenuItem.Name = "debugButtonsToolStripMenuItem";
             this.debugButtonsToolStripMenuItem.Size = new System.Drawing.Size(98, 20);
             this.debugButtonsToolStripMenuItem.Text = "Debug Buttons";
@@ -248,17 +248,20 @@
             this.consoleOutputWindow.TabIndex = 0;
             this.consoleOutputWindow.Text = "";
             // 
-            // showSpinnerToolStripMenuItem
+            // targetFileLoad_backgroundWorker
             // 
-            this.showSpinnerToolStripMenuItem.Name = "showSpinnerToolStripMenuItem";
-            this.showSpinnerToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.showSpinnerToolStripMenuItem.Text = "Show Spinner";
-            this.showSpinnerToolStripMenuItem.Click += new System.EventHandler(this.showSpinnerToolStripMenuItem_Click);
+            this.targetFileLoad_backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.targetFileLoad_backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
-            // backgroundWorker
+            // targetSpecLoad_backgroundWorker
             // 
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            this.targetSpecLoad_backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.targetSpecLoad_backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
+            // finalise_backgroundWorker
+            // 
+            this.finalise_backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.finalise_backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
             // MainWindow
             // 
@@ -307,8 +310,9 @@
         private System.Windows.Forms.ToolStripMenuItem debugButtonsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toHardCodedTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem writeTestItemMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showSpinnerToolStripMenuItem;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.ComponentModel.BackgroundWorker targetFileLoad_backgroundWorker;
+        private System.ComponentModel.BackgroundWorker targetSpecLoad_backgroundWorker;
+        private System.ComponentModel.BackgroundWorker finalise_backgroundWorker;
     }
 }
 
