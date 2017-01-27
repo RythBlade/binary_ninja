@@ -111,6 +111,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Notes.txt" />
     <Content Include="Yojimbo.ico" />
   </ItemGroup>
   <ItemGroup>

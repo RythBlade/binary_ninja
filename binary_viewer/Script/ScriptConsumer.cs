@@ -329,7 +329,7 @@ namespace binary_viewer.Script
                         if(arrayLength != -1) // this is an array - so do some shenanigans
                         {
                             // add the struct as a child of the current scope, set the script index to the start of the struct
-                            // and then push it onto the stack (the main loop will will read through and instance one of these structs
+                            // and then push it onto the stack (the main loop will read through and instance one of these structs
                             // and on completion will duplicate it to populate the array.)
                             ArraySpec arraySpec = new ArraySpec(fileBuffer, fileOffsetPosition, arrayLength);
                             arraySpec.Name = variableName;
