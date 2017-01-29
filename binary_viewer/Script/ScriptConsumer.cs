@@ -274,41 +274,45 @@ namespace binary_viewer.Script
 
             int fileOffsetPosition = parseStack.Peek().CurrentOffsetIntoFileSpec;
 
+            OffsetPointerSpec newPointer = null;
+            
             switch (pointerType)
             {
                 case PointerType.ePointer32:
-                    {
-                        long fileOffset = BitConverter.ToUInt32(fileBuffer, parseStack.Peek().CurrentOffsetIntoFileSpec);
-                        fileOffsetPosition = (int)fileOffset;
-                        parseStack.Peek().CurrentOffsetIntoFileSpec += 4;
-                    }
+                    newPointer = new OffsetPointerSpec(fileBuffer, fileOffsetPosition, 0);
+                    parseStack.Peek().CurrentOffsetIntoFileSpec += 4;
                     break;
                 case PointerType.ePointer64:
-                    {
-                        ulong fileOffset = BitConverter.ToUInt64(fileBuffer, parseStack.Peek().CurrentOffsetIntoFileSpec);
-                        fileOffsetPosition = (int)fileOffset;
-                        parseStack.Peek().CurrentOffsetIntoFileSpec += 8;
-                    }
+                    newPointer = new OffsetPointerSpec(fileBuffer, fileOffsetPosition, 0);
+                    parseStack.Peek().CurrentOffsetIntoFileSpec += 8;
                     break;
                 case PointerType.eOffset32:
-                    {
-                        long fileOffset = BitConverter.ToUInt32(fileBuffer, parseStack.Peek().CurrentOffsetIntoFileSpec);
-                        fileOffsetPosition = (int)fileOffset + parseStack.Peek().OffsetIntoFileSpecStackStarts;
-                        parseStack.Peek().CurrentOffsetIntoFileSpec += 4;
-                    }
+                    newPointer = new OffsetPointerSpec(fileBuffer, fileOffsetPosition, parseStack.Peek().OffsetIntoFileSpecStackStarts);
+                    parseStack.Peek().CurrentOffsetIntoFileSpec += 4;
                     break;
                 case PointerType.eOffset64:
-                    {
-                        ulong fileOffset = BitConverter.ToUInt64(fileBuffer, parseStack.Peek().CurrentOffsetIntoFileSpec);
-                        fileOffsetPosition = (int)fileOffset + parseStack.Peek().OffsetIntoFileSpecStackStarts;
-                        parseStack.Peek().CurrentOffsetIntoFileSpec += 8;
-                    }
+                    newPointer = new OffsetPointerSpec(fileBuffer, fileOffsetPosition, parseStack.Peek().OffsetIntoFileSpecStackStarts);
+                    parseStack.Peek().CurrentOffsetIntoFileSpec += 8;
                     break;
                 case PointerType.eNotAPointer:
-                default:
                     // carry on from where we got to!
+                    newPointer = null;
                     fileOffsetPosition = parseStack.Peek().CurrentOffsetIntoFileSpec;
                     break;
+                default:
+                    WriteErrorString($"A found pointer '{pointerTypeString}' type was unknown on line: {CalculateLineNumber(scriptText, 0, ScriptLocation)}");
+                    newPointer = null;
+                    fileOffsetPosition = parseStack.Peek().CurrentOffsetIntoFileSpec;
+                    break;
+            }
+
+            if (newPointer != null)
+            {
+                newPointer.Name = variableName;
+
+                fileOffsetPosition = newPointer.OffsetIntoFileOfTarget;
+
+                parseStack.Peek().CurrentStruct.Properties.Add(newPointer);
             }
 
             if (type == Spec.ValueType.eCustom)
@@ -333,8 +337,16 @@ namespace binary_viewer.Script
                             // and on completion will duplicate it to populate the array.)
                             ArraySpec arraySpec = new ArraySpec(fileBuffer, fileOffsetPosition, arrayLength);
                             arraySpec.Name = variableName;
-                            parseStack.Peek().CurrentStruct.Properties.Add(arraySpec);
 
+                            if (pointerType == PointerType.eNotAPointer)
+                            {
+                                parseStack.Peek().CurrentStruct.Properties.Add(arraySpec);
+                            }
+                            else
+                            {
+                                newPointer.Target = arraySpec;
+                            }
+                            
                             StackContents newStackContent = new StackContents();
                             newStackContent.CurrentStruct = newStruct;
                             newStackContent.ScriptLocation = tuple.Item2; // adjust the script pointer
@@ -349,7 +361,14 @@ namespace binary_viewer.Script
                         {
                             // add the struct as a child of the current scope, set the script index to the start of the struct
                             // and then push it onto the stack
-                            parseStack.Peek().CurrentStruct.Properties.Add(newStruct);
+                            if (pointerType == PointerType.eNotAPointer)
+                            {
+                                parseStack.Peek().CurrentStruct.Properties.Add(newStruct);
+                            }
+                            else
+                            {
+                                newPointer.Target = newStruct;
+                            }
 
                             StackContents newStackContent = new StackContents();
                             newStackContent.CurrentStruct = newStruct;
@@ -414,16 +433,22 @@ namespace binary_viewer.Script
                 
                 if (arrayLength == -1)
                 {
+
                     ValueSpec newValueSpec = new ValueSpec(fileBuffer, fileOffsetPosition);
                     newValueSpec.Name = variableName;
                     newValueSpec.LengthOfType = lengthOfType;
                     newValueSpec.TypeOfValue = type;
-                    parseStack.Peek().CurrentStruct.Properties.Add(newValueSpec);
-
+                    
                     // if we're pointing at a different part of the file, don't advance the file pointer along!
                     if (pointerType == PointerType.eNotAPointer)
                     {
+                        parseStack.Peek().CurrentStruct.Properties.Add(newValueSpec);
                         parseStack.Peek().CurrentOffsetIntoFileSpec += lengthOfType;
+                    }
+                    else
+                    {
+                        // if a pointer - make the array a child of the pointer
+                        newPointer.Target = newValueSpec;
                     }
 
                     parseStack.Peek().ScopedProperties.Add(newValueSpec);
@@ -432,7 +457,17 @@ namespace binary_viewer.Script
                 {
                     ArraySpec arraySpec = new ArraySpec(fileBuffer, fileOffsetPosition, arrayLength);
                     arraySpec.Name = variableName;
-                    parseStack.Peek().CurrentStruct.Properties.Add(arraySpec);
+
+                    // if not a pointer, add it to the current scope
+                    if (pointerType == PointerType.eNotAPointer)
+                    {
+                        parseStack.Peek().CurrentStruct.Properties.Add(arraySpec);
+                    }
+                    else
+                    {
+                        // if a pointer - make the array a child of the pointer
+                        newPointer.Target = arraySpec;
+                    }
 
                     for (int i = 0; i < arrayLength; ++i)
                     {

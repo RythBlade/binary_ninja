@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ArraySpecConverter.cs" />
+    <Compile Include="Attributes\OffsetPointerSpecConverter.cs" />
     <Compile Include="Attributes\PropertySpecConverter.cs" />
     <Compile Include="Attributes\PropertySpecPropertyDescripton.cs" />
     <Compile Include="Attributes\StructSpecConverter.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Script\StackContents.cs" />
     <Compile Include="Spec\ArraySpec.cs" />
     <Compile Include="Spec\FileSpec.cs" />
+    <Compile Include="Spec\OffsetPointerSpec.cs" />
     <Compile Include="Spec\PropertySpec.cs" />
     <Compile Include="Spec\StructSpec.cs" />
     <Compile Include="Spec\ValueSpec.cs" />

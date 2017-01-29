@@ -80,7 +80,7 @@ namespace binary_viewer
                 {
                     using (BinaryWriter binaryWriter = new BinaryWriter(File.Open(saveTestFileDialogue.FileName, FileMode.Create)))
                     {
-                        int testValueOffset = 36; binaryWriter.Write(testValueOffset);
+                        uint testValueOffset = 36; binaryWriter.Write(testValueOffset);
                         testValueOffset = 52; binaryWriter.Write(testValueOffset);
 
                         testValueOffset = 555; binaryWriter.Write(testValueOffset);
