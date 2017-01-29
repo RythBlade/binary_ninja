@@ -3,3 +3,7 @@
 - Array of pointers to things
 - Variable length arrays
 - Unit tests!!
+- can't use the string "file" anywhere in the script - need a proper keyword system!
+- Missing a file name knocks the whole thing out of whack! Need a proper error!
+
+- text dump of pointers needs implementing properly
