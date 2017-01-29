@@ -1,5 +1,4 @@
 ﻿using binary_viewer.Attributes;
-using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace binary_viewer.Spec

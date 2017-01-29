@@ -12,6 +12,8 @@ namespace binary_viewer.Script
         public bool ThisIsAnArray { get; set; }
         public int ArrayLength { get; set; }
         public ArraySpec TheArray { get; set; }
+        public int CurrentOffsetIntoFileSpec { get; set; }
+        public int OffsetIntoFileSpecStackStarts { get; set; }
 
         public StackContents()
         {
@@ -21,6 +23,8 @@ namespace binary_viewer.Script
             ArrayLength = 0;
             TheArray = null;
             CurrentStruct = null;
+            CurrentOffsetIntoFileSpec = 0;
+            OffsetIntoFileSpecStackStarts = 0;
         }
 
     }

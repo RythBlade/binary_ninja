@@ -90,16 +90,42 @@ namespace binary_viewer
                 {
                     using (BinaryWriter binaryWriter = new BinaryWriter(File.Open(saveTestFileDialogue.FileName, FileMode.Create)))
                     {
+                        uint testValueOffset = 36; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 52; binaryWriter.Write(testValueOffset);
+
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+
                         float value = 1.0f;  binaryWriter.Write(value);
+                        testValueOffset = 16; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 556; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 557; binaryWriter.Write(testValueOffset);
                         value = 2.0f; binaryWriter.Write(value);
                         value = 3.0f; binaryWriter.Write(value);
+                        testValueOffset = 16; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
                         value = 4.0f; binaryWriter.Write(value);
 
                         int nextValue = 5; binaryWriter.Write(nextValue);
+                        testValueOffset = 16; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
                         nextValue = 6; binaryWriter.Write(nextValue);
                         nextValue = 7; binaryWriter.Write(nextValue);
+                        testValueOffset = 16; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
                         nextValue = 8; binaryWriter.Write(nextValue);
                         nextValue = 9; binaryWriter.Write(nextValue);
+                        testValueOffset = 16; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
                         nextValue = 9; binaryWriter.Write(nextValue);
 
                         string outputString = "Some test string";

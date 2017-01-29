@@ -1,0 +1,5 @@
+﻿Still to do:
+- Pointer to pointer
+- Array of pointers to things
+- Variable length arrays
+- Unit tests!!
