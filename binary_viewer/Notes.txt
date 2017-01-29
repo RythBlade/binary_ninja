@@ -1,29 +1,5 @@
-﻿Reference pointer implementation fails when a ref pointer is contained in a struct which is instanced as an array.
-
-E.g. 
-
-struct IntPairs
-{
-	int32 oneInt;
-	offset32 int32 twoInt;
-}
-
-struct FloatPairs
-{
-	float oneInt;
-	offset32 float twoInt;
-}
-
-file SomeFileName
-{
-	pointer32 FloatPairs firstFloat[2];
-	pointer32 IntPairs firstFloat[3];
-	char fixedLengthArray[10];
-}
-
-
-Here the ref pointer is inside a struct which we're making an array of. When we duplicate the struct to create the array instances, the thing that was a reference 
-now becomes an instrinsice/custom type rather than a reference, because the reference keyword is only used to position the file view objects in the right place and
-aren't maintained as actual types themselves. Make them legit types that contain what they point at and it should all just work! Can also nudge them around when value
-editing is implemented!
-
+﻿Still to do:
+- Pointer to pointer
+- Array of pointers to things
+- Variable length arrays
+- Unit tests!!

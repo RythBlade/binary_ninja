@@ -93,8 +93,8 @@ namespace binary_viewer
 
                         float value = 1.0f;  binaryWriter.Write(value);
                         testValueOffset = 16; binaryWriter.Write(testValueOffset);
-                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
-                        testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 556; binaryWriter.Write(testValueOffset);
+                        testValueOffset = 557; binaryWriter.Write(testValueOffset);
                         value = 2.0f; binaryWriter.Write(value);
                         value = 3.0f; binaryWriter.Write(value);
                         testValueOffset = 16; binaryWriter.Write(testValueOffset);

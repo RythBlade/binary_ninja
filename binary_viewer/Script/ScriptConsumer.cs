@@ -207,6 +207,10 @@ namespace binary_viewer.Script
                     arrayLength = int.Parse(arrayLengthString);
                 }
             }
+            else if(startArrayLength != -1 || endOfArrayLength != -1)
+            {
+                WriteErrorString($"Incomplete array definition found: '{variableName}', on line: {CalculateLineNumber(scriptText, 0, ScriptLocation)}");
+            }
 
             return arrayLength;
         }
