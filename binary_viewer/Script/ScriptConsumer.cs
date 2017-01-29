@@ -39,8 +39,8 @@ namespace binary_viewer.Script
 
         private int ScriptLocation
         {
-            get { return parseStack.Peek().ScriptLocation; }
-            set { parseStack.Peek().ScriptLocation = value; }
+            get { return parseStack.Count > 0 ? parseStack.Peek().ScriptLocation : -1; }
+            set { if (parseStack.Count > 0) { parseStack.Peek().ScriptLocation = value; } }
         }
 
         public string ErrorOutput { get; set; }
