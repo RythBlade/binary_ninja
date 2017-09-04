@@ -85,7 +85,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Script\ScriptConsumer.cs" />
+    <Compile Include="Script\IScriptConsumer.cs" />
+    <Compile Include="Script\ScriptConsumerCSharp.cs" />
+    <Compile Include="Script\ScriptConsumerManual.cs" />
     <Compile Include="Script\StackContents.cs" />
     <Compile Include="Spec\ArraySpec.cs" />
     <Compile Include="Spec\FileSpec.cs" />

@@ -284,7 +284,7 @@ namespace binary_viewer
                     //try
                     {
                         FileSpec fileSpec = new FileSpec(m_targetFileBuffer, 0);
-                        ScriptConsumer consumer = new ScriptConsumer(m_scriptBuffer, fileSpec);
+                        ScriptConsumerManual consumer = new ScriptConsumerManual(m_scriptBuffer, fileSpec);
                         ParserPayload workerPayload = new ParserPayload(fileSpec, consumer);
 
                         ShowLoadingDialogue("Parsing the file...");
