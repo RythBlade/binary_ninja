@@ -3,6 +3,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace binary_viewer.Script
 {
@@ -17,6 +18,11 @@ namespace binary_viewer.Script
         {
             get { return errorText; }
             set { errorText = value; }
+        }
+
+        List<string> IScriptConsumer.FoundErrors
+        {
+            get { return errorsFound; }
         }
 
         public List<string> Errors
@@ -60,7 +66,25 @@ namespace binary_viewer.Script
             }
             else
             {
-                
+                Type typeToParse = null;
+
+                foreach (Type foundType in results.CompiledAssembly.ExportedTypes)
+                {
+                    if(foundType.FullName == "Main")
+                    {
+                        typeToParse = foundType;
+                    }
+                }
+
+                foreach (FieldInfo foundField in typeToParse.GetFields())
+                {
+                    //statusTextBox.Text += "Found parameter: " + foundField.FieldType.Name + " - " + foundField.Name + "\r\n";
+
+                    /*switch(foundField.FieldType)
+                    {
+                        case 
+                    }*/
+                }
 
                 /*foreach (Type foundType in results.CompiledAssembly.ExportedTypes)
                 {

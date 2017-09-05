@@ -37,6 +37,8 @@ namespace binary_viewer.Script
         private byte[] fileBuffer;
         //private int currentOffsetIntoFileSpec;
 
+        private List<string> errorsFound = new List<string>();
+
         private int ScriptLocation
         {
             get { return parseStack.Count > 0 ? parseStack.Peek().ScriptLocation : -1; }
@@ -44,6 +46,11 @@ namespace binary_viewer.Script
         }
 
         public string ErrorOutput { get; set; }
+
+        List<string> IScriptConsumer.FoundErrors
+        {
+            get { return errorsFound; }
+        }
 
         public ScriptConsumerManual(string scriptToConsume, FileSpec fileSpecToPopulate)
         {
@@ -694,6 +701,7 @@ namespace binary_viewer.Script
 
         private void WriteErrorString(string error)
         {
+            errorsFound.Add(error);
             ErrorOutput += error + "\n";
         }
 

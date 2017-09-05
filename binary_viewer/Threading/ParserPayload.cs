@@ -6,9 +6,9 @@ namespace binary_viewer.Threading
     public class ParserPayload
     {
         public FileSpec FileSpecToPopulate { get; set; }
-        public ScriptConsumerManual ScriptConsumerToUse { get; set; }
+        public IScriptConsumer ScriptConsumerToUse { get; set; }
 
-        public ParserPayload(FileSpec fileSpec, ScriptConsumerManual scriptConsumer)
+        public ParserPayload(FileSpec fileSpec, IScriptConsumer scriptConsumer)
         {
             FileSpecToPopulate = fileSpec;
             ScriptConsumerToUse = scriptConsumer;

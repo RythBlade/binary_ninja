@@ -106,13 +106,12 @@ namespace binary_viewer
                         testValueOffset = 556; binaryWriter.Write(testValueOffset);
                         testValueOffset = 557; binaryWriter.Write(testValueOffset);
                         value = 2.0f; binaryWriter.Write(value);
-                        value = 3.0f; binaryWriter.Write(value);
                         testValueOffset = 16; binaryWriter.Write(testValueOffset);
                         testValueOffset = 555; binaryWriter.Write(testValueOffset);
                         testValueOffset = 555; binaryWriter.Write(testValueOffset);
-                        value = 4.0f; binaryWriter.Write(value);
-
+                        
                         int nextValue = 5; binaryWriter.Write(nextValue);
+                        nextValue = 5; binaryWriter.Write(nextValue);
                         testValueOffset = 16; binaryWriter.Write(testValueOffset);
                         testValueOffset = 555; binaryWriter.Write(testValueOffset);
                         testValueOffset = 555; binaryWriter.Write(testValueOffset);
@@ -126,6 +125,7 @@ namespace binary_viewer
                         testValueOffset = 16; binaryWriter.Write(testValueOffset);
                         testValueOffset = 555; binaryWriter.Write(testValueOffset);
                         testValueOffset = 555; binaryWriter.Write(testValueOffset);
+                        nextValue = 9; binaryWriter.Write(nextValue);
                         nextValue = 9; binaryWriter.Write(nextValue);
 
                         string outputString = "Some test string";
@@ -284,7 +284,8 @@ namespace binary_viewer
                     //try
                     {
                         FileSpec fileSpec = new FileSpec(m_targetFileBuffer, 0);
-                        ScriptConsumerManual consumer = new ScriptConsumerManual(m_scriptBuffer, fileSpec);
+                        //IScriptConsumer consumer = new ScriptConsumerManual(m_scriptBuffer, fileSpec);
+                        IScriptConsumer consumer = new ScriptConsumerCSharp(m_scriptBuffer, fileSpec);
                         ParserPayload workerPayload = new ParserPayload(fileSpec, consumer);
 
                         ShowLoadingDialogue("Parsing the file...");
@@ -370,13 +371,26 @@ namespace binary_viewer
 
             if (parserPayload != null)
             {
-                // output the results of the script!
-                m_fileSpec = parserPayload.FileSpecToPopulate;
-                outputWindowTextBox.Text = parserPayload.FileSpecToPopulate.PrintFile();
-                fileDisplayPropertyGrid.SelectedObject = parserPayload.FileSpecToPopulate;
-                scriptViewTextBox.Text = m_scriptBuffer;
+                if(parserPayload.ScriptConsumerToUse.FoundErrors.Count > 0)
+                {
+                    // finished with errors, so don't instantiate anything and output the errors
+                    m_fileSpec = null;
+                    outputWindowTextBox.Text = string.Empty;
+                    fileDisplayPropertyGrid.SelectedObject = null;
+                    scriptViewTextBox.Text = m_scriptBuffer;
 
-                WriteMessageToErrorOutputWindow(parserPayload.ScriptConsumerToUse.ErrorOutput);
+                    WriteMessageToErrorOutputWindow(parserPayload.ScriptConsumerToUse.ErrorOutput);
+                }
+                else
+                {
+                    // output the results of the script!
+                    m_fileSpec = parserPayload.FileSpecToPopulate;
+                    outputWindowTextBox.Text = parserPayload.FileSpecToPopulate.PrintFile();
+                    fileDisplayPropertyGrid.SelectedObject = parserPayload.FileSpecToPopulate;
+                    scriptViewTextBox.Text = m_scriptBuffer;
+
+                    WriteMessageToErrorOutputWindow(parserPayload.ScriptConsumerToUse.ErrorOutput);
+                }
             }
             else if (scriptFilePayload != null)
             {
@@ -408,6 +422,7 @@ namespace binary_viewer
 
         private void ShowLoadingDialogue(string loadingMessage)
         {
+#if !DEBUG
             if (m_newLoadingDialogue != null)
             {
                 m_newLoadingDialogue.CancelCloseLoading();
@@ -424,6 +439,7 @@ namespace binary_viewer
 
                 m_newLoadingDialogue.Show(this);
             }
+#endif
         }
 
         private void HideLoadingDialogue()
