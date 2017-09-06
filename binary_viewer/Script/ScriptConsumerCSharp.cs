@@ -13,6 +13,7 @@ namespace binary_viewer.Script
         private FileSpec fileSpec = null;
         private string errorText = string.Empty;
         private List<string> errorsFound = new List<string>();
+        private byte[] fileBuffer = null;
 
         string IScriptConsumer.ErrorOutput
         {
@@ -34,6 +35,7 @@ namespace binary_viewer.Script
         {
             scriptText = scriptToConsume;
             fileSpec = fileSpecToPopulate;
+            fileBuffer = fileSpecToPopulate.FileBuffer;
         }
 
         void IScriptConsumer.ParseScript()
@@ -76,27 +78,65 @@ namespace binary_viewer.Script
                     }
                 }
 
-                foreach (FieldInfo foundField in typeToParse.GetFields())
-                {
-                    //statusTextBox.Text += "Found parameter: " + foundField.FieldType.Name + " - " + foundField.Name + "\r\n";
+                int currentFileOffset = 0;
 
-                    /*switch(foundField.FieldType)
-                    {
-                        case 
-                    }*/
-                }
-
-                /*foreach (Type foundType in results.CompiledAssembly.ExportedTypes)
-                {
-                    statusTextBox.Text += $"class {foundType.Name}\r\n";
-
-                    foreach (FieldInfo foundField in foundType.GetFields())
-                    {
-                        statusTextBox.Text += "Found parameter: " + foundField.FieldType.Name + " - " + foundField.Name + "\r\n";
-
-                    }
-                }*/
+                ParseCustomType(typeToParse, ref currentFileOffset, fileSpec.File.Properties);
             }
+        }
+
+        private void ParseCustomType(Type customType, ref int currentFileOffset, List<PropertySpec> listToAddTo)
+        {
+            foreach (FieldInfo foundField in customType.GetFields())
+            {
+                if (foundField.FieldType == typeof(int))
+                {
+                    AddNewProperty(Spec.ValueType.eInt32, foundField.Name, ref currentFileOffset, 4, listToAddTo);
+                }
+                else if (foundField.FieldType == typeof(uint))
+                {
+                    AddNewProperty(Spec.ValueType.eUnsignedInt32, foundField.Name, ref currentFileOffset, 4, listToAddTo);
+                }
+                else if (foundField.FieldType == typeof(long))
+                {
+                    AddNewProperty(Spec.ValueType.eInt64, foundField.Name, ref currentFileOffset, 8, listToAddTo);
+                }
+                else if (foundField.FieldType == typeof(ulong))
+                {
+                    AddNewProperty(Spec.ValueType.eUnsignedInt64, foundField.Name, ref currentFileOffset, 8, listToAddTo);
+                }
+                else if (foundField.FieldType == typeof(float))
+                {
+                    AddNewProperty(Spec.ValueType.eFloat, foundField.Name, ref currentFileOffset, 4, listToAddTo);
+                }
+                else if (foundField.FieldType == typeof(double))
+                {
+                    AddNewProperty(Spec.ValueType.eDouble, foundField.Name, ref currentFileOffset, 8, listToAddTo);
+                }
+                else if (foundField.FieldType == typeof(char))
+                {
+                    AddNewProperty(Spec.ValueType.eChar, foundField.Name, ref currentFileOffset, 1, listToAddTo);
+                    
+                }
+                else
+                {
+                    StructSpec newTypeStruct = new StructSpec(fileBuffer, currentFileOffset);
+                    newTypeStruct.Name = foundField.Name;
+                    listToAddTo.Add(newTypeStruct);
+                    ParseCustomType(foundField.FieldType, ref currentFileOffset, newTypeStruct.Properties);
+                }
+            }
+        }
+
+        private void AddNewProperty(Spec.ValueType type, string name, ref int currentFileOffset, int lengthOfType, List<PropertySpec> listToAddTo)
+        {
+            ValueSpec value = new ValueSpec(fileBuffer, currentFileOffset);
+            value.TypeOfValue = type;
+            value.LengthOfType = lengthOfType;
+            value.Name = name;
+
+            listToAddTo.Add(value);
+
+            currentFileOffset += lengthOfType;
         }
     }
 }

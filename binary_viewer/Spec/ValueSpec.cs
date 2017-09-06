@@ -109,7 +109,7 @@ namespace binary_viewer.Spec
 
         public override string PrintPropertyText(string prefixString)
         {
-            return prefixString + Name + " : " + PrintPropertyValueText() + "\n";
+            return prefixString + Name + " : " + PrintPropertyValueText();
         }
 
         public override PropertySpec Clone(byte[] fileDataBuffer, int indexOfFirstByte)
