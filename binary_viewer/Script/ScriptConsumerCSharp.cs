@@ -46,7 +46,7 @@ namespace binary_viewer.Script
 
             // create our compiler + includes and compile
             CodeDomProvider csc = CodeDomProvider.CreateProvider("CSharp");
-            CompilerParameters parameters = new CompilerParameters(new[] { "System.Core.dll" }, "", true);
+            CompilerParameters parameters = new CompilerParameters(new[] { "System.Core.dll", "binary_viewer.exe" }, "", true);
 
             parameters.GenerateInMemory = true;
             parameters.GenerateExecutable = false;
@@ -123,6 +123,13 @@ namespace binary_viewer.Script
                     newTypeStruct.Name = foundField.Name;
                     listToAddTo.Add(newTypeStruct);
                     ParseCustomType(foundField.FieldType, ref currentFileOffset, newTypeStruct.Properties);
+
+                    //foundField.CustomAttributes.First().
+                    
+
+                    FirstTest myTest = new FirstTest();
+                    Type testType = myTest.GetType();
+                    testType = testType;
                 }
             }
         }
