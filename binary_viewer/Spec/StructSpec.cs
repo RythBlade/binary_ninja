@@ -1,4 +1,4 @@
-﻿using binary_viewer.Attributes;
+﻿using binary_viewer.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -88,34 +88,35 @@ namespace binary_viewer.Script
         {
             foreach (FieldInfo foundField in customType.GetFields())
             {
+                IList<CustomAttributeData> customAttributes = foundField.CustomAttributes.ToList();
+
                 if (foundField.FieldType == typeof(int))
                 {
-                    AddNewProperty(Spec.ValueType.eInt32, foundField.Name, ref currentFileOffset, 4, listToAddTo);
+                    AddNewProperty(Spec.ValueType.eInt32, foundField.Name, ref currentFileOffset, 4, customAttributes, listToAddTo);
                 }
                 else if (foundField.FieldType == typeof(uint))
                 {
-                    AddNewProperty(Spec.ValueType.eUnsignedInt32, foundField.Name, ref currentFileOffset, 4, listToAddTo);
+                    AddNewProperty(Spec.ValueType.eUnsignedInt32, foundField.Name, ref currentFileOffset, 4, customAttributes, listToAddTo);
                 }
                 else if (foundField.FieldType == typeof(long))
                 {
-                    AddNewProperty(Spec.ValueType.eInt64, foundField.Name, ref currentFileOffset, 8, listToAddTo);
+                    AddNewProperty(Spec.ValueType.eInt64, foundField.Name, ref currentFileOffset, 8, customAttributes, listToAddTo);
                 }
                 else if (foundField.FieldType == typeof(ulong))
                 {
-                    AddNewProperty(Spec.ValueType.eUnsignedInt64, foundField.Name, ref currentFileOffset, 8, listToAddTo);
+                    AddNewProperty(Spec.ValueType.eUnsignedInt64, foundField.Name, ref currentFileOffset, 8, customAttributes, listToAddTo);
                 }
                 else if (foundField.FieldType == typeof(float))
                 {
-                    AddNewProperty(Spec.ValueType.eFloat, foundField.Name, ref currentFileOffset, 4, listToAddTo);
+                    AddNewProperty(Spec.ValueType.eFloat, foundField.Name, ref currentFileOffset, 4, customAttributes, listToAddTo);
                 }
                 else if (foundField.FieldType == typeof(double))
                 {
-                    AddNewProperty(Spec.ValueType.eDouble, foundField.Name, ref currentFileOffset, 8, listToAddTo);
+                    AddNewProperty(Spec.ValueType.eDouble, foundField.Name, ref currentFileOffset, 8, customAttributes, listToAddTo);
                 }
                 else if (foundField.FieldType == typeof(char))
                 {
-                    AddNewProperty(Spec.ValueType.eChar, foundField.Name, ref currentFileOffset, 1, listToAddTo);
-                    
+                    AddNewProperty(Spec.ValueType.eChar, foundField.Name, ref currentFileOffset, 1, customAttributes, listToAddTo);
                 }
                 else
                 {
@@ -123,27 +124,118 @@ namespace binary_viewer.Script
                     newTypeStruct.Name = foundField.Name;
                     listToAddTo.Add(newTypeStruct);
                     ParseCustomType(foundField.FieldType, ref currentFileOffset, newTypeStruct.Properties);
-
-                    //foundField.CustomAttributes.First().
-                    
-
-                    FirstTest myTest = new FirstTest();
-                    Type testType = myTest.GetType();
-                    testType = testType;
                 }
             }
         }
 
-        private void AddNewProperty(Spec.ValueType type, string name, ref int currentFileOffset, int lengthOfType, List<PropertySpec> listToAddTo)
+        private void AddNewProperty(
+            Spec.ValueType type
+            , string name
+            , ref int currentFileOffset
+            , int lengthOfType
+            , IList<CustomAttributeData> fieldAttributes
+            , List<PropertySpec> listToAddTo)
         {
-            ValueSpec value = new ValueSpec(fileBuffer, currentFileOffset);
-            value.TypeOfValue = type;
-            value.LengthOfType = lengthOfType;
-            value.Name = name;
+            int arrayLength = GetArrayLength(fieldAttributes, listToAddTo);
 
-            listToAddTo.Add(value);
+            if(arrayLength > 0)
+            {
+                ArraySpec array = new ArraySpec(fileBuffer, currentFileOffset, arrayLength);
 
-            currentFileOffset += lengthOfType;
+                for(int i = 0; i < arrayLength; ++i)
+                {
+                    ValueSpec value = new ValueSpec(fileBuffer, currentFileOffset);
+                    value.TypeOfValue = type;
+                    value.LengthOfType = lengthOfType;
+                    value.Name = name;
+
+                    array.PropertyArray[i] = value;
+
+                    currentFileOffset += lengthOfType;
+                }
+
+                listToAddTo.Add(array);
+            }
+            else
+            {
+                ValueSpec value = new ValueSpec(fileBuffer, currentFileOffset);
+                value.TypeOfValue = type;
+                value.LengthOfType = lengthOfType;
+                value.Name = name;
+
+                listToAddTo.Add(value);
+
+                currentFileOffset += lengthOfType;
+            }
+        }
+
+        private int GetArrayLength(IList<CustomAttributeData> fieldAttributes, List<PropertySpec> currentMembers)
+        {
+            int arrayLength = 0;
+
+            if(fieldAttributes.Count > 0)
+            {
+                foreach(CustomAttributeData attribute in fieldAttributes)
+                {
+                    if( attribute.AttributeType == typeof(BnArray))
+                    {
+                        CustomAttributeTypedArgument argument = attribute.ConstructorArguments[0];
+                        Type argumentType = argument.ArgumentType;
+
+                        if (argumentType == typeof(int))
+                        {
+                            // read off the array length directly from the attribute
+                            arrayLength = (int)argument.Value;
+                        }
+                        else if (argumentType == typeof(string))
+                        {
+                            string variableName = (string)argument.Value;
+
+                            // look for the named variable and read its value
+                            foreach (PropertySpec spec in currentMembers)
+                            {
+                                if (spec.GetType() == typeof(ValueSpec) && spec.Name == variableName)
+                                {
+                                    ValueSpec valueSpec = (ValueSpec)spec;
+                                    switch (valueSpec.TypeOfValue)
+                                    {
+                                        case Spec.ValueType.eInt32:
+                                            arrayLength = valueSpec.GetAsInt32();
+                                            break;
+                                        case Spec.ValueType.eUnsignedInt32:
+                                            arrayLength = (int)valueSpec.GetAsUint32();
+                                            break;
+                                        case Spec.ValueType.eInt64:
+                                            arrayLength = (int)valueSpec.GetAsInt64();
+                                            break;
+                                        case Spec.ValueType.eUnsignedInt64:
+                                            arrayLength = (int)valueSpec.GetAsUint64();
+                                            break;
+                                        case Spec.ValueType.eChar:
+                                        case Spec.ValueType.eString:
+                                        case Spec.ValueType.eCustom:
+                                        case Spec.ValueType.eFloat:
+                                        case Spec.ValueType.eDouble:
+                                        default:
+                                            // error, incompatible or unknown type
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // errors
+                        }
+                    }
+                    else
+                    {
+                        // warning about unknown attributes
+                    }
+                }
+            }
+
+            return arrayLength;
         }
     }
 }

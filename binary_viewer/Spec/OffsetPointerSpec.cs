@@ -1,4 +1,4 @@
-﻿using binary_viewer.Attributes;
+﻿using binary_viewer.Converters;
 using System.ComponentModel;
 
 namespace binary_viewer.Spec

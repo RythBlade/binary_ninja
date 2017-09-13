@@ -2,23 +2,26 @@
 using System;
 using System.ComponentModel;
 
-namespace binary_viewer.Attributes
+namespace binary_viewer.Converters
 {
-    class OffsetPointerSpecConverter : ExpandableObjectConverter
+    class ArraySpecConverter : ExpandableObjectConverter
     {
         public override object ConvertTo(ITypeDescriptorContext context,
                              System.Globalization.CultureInfo culture,
                              object value, Type destType)
         {
-            if (destType == typeof(string) && value is OffsetPointerSpec)
+            if (destType == typeof(string) && value is ArraySpec)
             {
-                OffsetPointerSpec emp = value as OffsetPointerSpec;
+                ArraySpec emp = value as ArraySpec;
 
                 string stringToOutput = string.Empty;
 
                 if (emp != null)
                 {
-                    stringToOutput += $"{emp.OffsetValue} {{ {emp.Target.Value} }}";
+                    foreach (PropertySpec spec in emp.PropertyArray)
+                    {
+                        stringToOutput += spec.Value + ", ";
+                    }
                 }
 
                 return stringToOutput;

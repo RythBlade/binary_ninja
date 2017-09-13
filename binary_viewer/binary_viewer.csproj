@@ -66,11 +66,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\ArraySpecConverter.cs" />
-    <Compile Include="Attributes\OffsetPointerSpecConverter.cs" />
-    <Compile Include="Attributes\PropertySpecConverter.cs" />
-    <Compile Include="Attributes\PropertySpecPropertyDescripton.cs" />
-    <Compile Include="Attributes\StructSpecConverter.cs" />
+    <Compile Include="Attributes\BnArray.cs" />
+    <Compile Include="Converters\ArraySpecConverter.cs" />
+    <Compile Include="Converters\OffsetPointerSpecConverter.cs" />
+    <Compile Include="Converters\PropertySpecConverter.cs" />
+    <Compile Include="Converters\PropertySpecPropertyDescripton.cs" />
+    <Compile Include="Converters\StructSpecConverter.cs" />
     <Compile Include="LoadingDialogue.cs">
       <SubType>Form</SubType>
     </Compile>
