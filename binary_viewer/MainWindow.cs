@@ -128,7 +128,7 @@ namespace binary_viewer
                         nextValue = 9; binaryWriter.Write(nextValue);
                         nextValue = 9; binaryWriter.Write(nextValue);
 
-                        string outputString = "Some test string";
+                        string outputString = "Some test string that is long";
                         binaryWriter.Write(outputString);
 
                         binaryWriter.Close();

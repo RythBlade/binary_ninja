@@ -141,6 +141,7 @@ namespace binary_viewer.Script
             if(arrayLength > 0)
             {
                 ArraySpec array = new ArraySpec(fileBuffer, currentFileOffset, arrayLength);
+                array.Name = name;
 
                 for(int i = 0; i < arrayLength; ++i)
                 {
@@ -212,6 +213,8 @@ namespace binary_viewer.Script
                                             arrayLength = (int)valueSpec.GetAsUint64();
                                             break;
                                         case Spec.ValueType.eChar:
+                                            arrayLength = (int)valueSpec.GetAsChar();
+                                            break;
                                         case Spec.ValueType.eString:
                                         case Spec.ValueType.eCustom:
                                         case Spec.ValueType.eFloat:

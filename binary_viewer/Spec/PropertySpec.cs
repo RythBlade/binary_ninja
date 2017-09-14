@@ -21,8 +21,10 @@ namespace binary_viewer.Spec
         [BrowsableAttribute(false)]
         protected byte[] fileData;
 
-        //[BrowsableAttribute(false)]
-        public int firstByteOfValue { get; set; }
+        [BrowsableAttribute(false)]
+        protected int firstByteOfValue;
+        
+        public int FirstByteOfValue { get; }
 
         public PropertySpec(byte[] fileDataBuffer, int indexOfFirstByte)
         {

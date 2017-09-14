@@ -95,7 +95,8 @@ namespace binary_viewer.Spec
                 case ValueType.eUnsignedInt64:
                     return GetAsUint64().ToString();
                 case ValueType.eChar:
-                    return GetAsChar().ToString();
+                    char charValue = GetAsChar();
+                    return $"\'{charValue.ToString()}\' {((int)charValue).ToString()}";
                 case ValueType.eString:
                     break;
                 case ValueType.eCustom:
