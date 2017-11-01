@@ -96,7 +96,6 @@
     <Compile Include="Spec\PropertySpec.cs" />
     <Compile Include="Spec\StructSpec.cs" />
     <Compile Include="Spec\ValueSpec.cs" />
-    <Compile Include="TestClass.cs" />
     <Compile Include="Threading\ParserPayload.cs" />
     <Compile Include="Threading\ScriptFilePayLoad.cs" />
     <Compile Include="Threading\TargetFileLoadPayLoad.cs" />
