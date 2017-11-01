@@ -1,0 +1,55 @@
+public class UintTuple
+{
+	public uint m_uintOne;
+	public uint m_uintTwo;
+}
+
+public class ComplexStruct
+{
+	public float m_floatOne;
+	public uint m_uintOne;
+	public uint m_uintTwo;
+	public uint m_uintThree;
+}
+
+public class IntTuple
+{
+	public int m_intOne;
+	public int m_intTwo;
+}
+
+public class UintTriplet
+{
+	public uint m_uintOne;
+	public uint m_uintTwo;
+	public uint m_uintThree;
+}
+
+public class ComplexStructTwo
+{
+	public IntTuple m_intTuple;
+	public UintTriplet m_uintTriple;
+}
+
+public class Main
+{
+	public UintTuple m_tupleOne;
+	public UintTuple m_tupleTwo;
+	public UintTuple m_tupleThree;
+	public UintTuple m_tupleFour;
+	
+	public uint m_spareUint;
+	public ComplexStruct m_complexOne;
+	public ComplexStruct m_complexTwo;
+	
+	public ComplexStructTwo m_complexTwoOne;
+	public ComplexStructTwo m_complexTwoTwo;
+	public ComplexStructTwo m_complexTwoThree;
+	
+	public IntTuple m_intTuple;
+	
+	public char m_arrayLength;
+	
+	[BnArray( "m_arrayLength" )]
+	public char m_charArray;
+}
