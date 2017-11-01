@@ -59,7 +59,7 @@ namespace binary_viewer.Script
             parameters.GenerateExecutable = false;
 
             CompilerResults results = csc.CompileAssemblyFromSource(parameters, scriptText);
-
+            
             // process result - output errors or populate the file spec
             if (results.Errors.HasErrors)
             {
@@ -199,6 +199,11 @@ namespace binary_viewer.Script
 
             if(fieldAttributes.Count > 0)
             {
+                if(fieldAttributes.Count > 1)
+                {
+                    WriteNewError("There are too many attributes on a variable. You should only have a maximum of 1 array attribute on any member. Only the last one will be used.");
+                }
+
                 foreach(CustomAttributeData attribute in fieldAttributes)
                 {
                     if( attribute.AttributeType == typeof(BnArray))
@@ -251,12 +256,15 @@ namespace binary_viewer.Script
                         }
                         else
                         {
-                            // errors
+                            // the c# compiler should've caught this for us, but just in case it doesn't, add an error
+                            WriteNewError("Array attribute found with invalid constructor arguments.");
                         }
                     }
                     else
                     {
-                        // warning about unknown attributes
+                        // this is a catch all for when we add more attribute types, or if they try to use the build in C# ones
+                        // they're only allowed to use our BnArray for arrays.
+                        WriteNewError($"An unknown or invalid attribute type \'{attribute.AttributeType}\' was found in the script.");
                     }
                 }
             }

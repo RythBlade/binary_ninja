@@ -8,7 +8,9 @@
 
 - text dump of pointers needs implementing properly
 
-
+- Loading dialogue - start the threads, if they don't return inside some reasonable length of time (e.g. 300ms), 
+then open the loading dialogue and force it to be open for a minimum amount of time. This way the dialogue
+doesn't flash up all the time but is there when required and appears in a neat fashion.
 
 How to use C# for Binary Ninja
 
