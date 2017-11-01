@@ -9,6 +9,8 @@ namespace binary_viewer.Script
 {
     public class ScriptConsumerCSharp : IScriptConsumer
     {
+        private static string mainEntryName = "Main";
+
         private string scriptText = string.Empty;
         private FileSpec fileSpec = null;
         private string errorText = string.Empty;
@@ -24,6 +26,11 @@ namespace binary_viewer.Script
         List<string> IScriptConsumer.FoundErrors
         {
             get { return errorsFound; }
+        }
+        
+        public bool HasErrors
+        {
+            get { return errorsFound.Count > 0; }
         }
 
         public List<string> Errors
@@ -62,25 +69,41 @@ namespace binary_viewer.Script
 
                 foreach(CompilerError error in foundErrors)
                 {
-                    errorText += $"{error.ErrorText}\r\n";
-                    errorsFound.Add(error.ErrorText);
+                    WriteNewError(error.ErrorText);
                 }
             }
             else
             {
                 Type typeToParse = null;
 
+                // look for the main entry point and parse it
                 foreach (Type foundType in results.CompiledAssembly.ExportedTypes)
                 {
-                    if(foundType.FullName == "Main")
+                    if(foundType.FullName == mainEntryName)
                     {
-                        typeToParse = foundType;
+                        if (typeToParse == null)
+                        {
+                            typeToParse = foundType;
+                        }
+                        else
+                        {
+                            WriteNewError($"More than one \"{mainEntryName}\" was found in the file spec. You must only have 1.");
+                            break;
+                        }
                     }
                 }
 
-                int currentFileOffset = 0;
+                if (typeToParse == null)
+                {
+                    WriteNewError($"No class called \"{mainEntryName}\" could be found. There must be at least 1 as the main entry point for the script.");
+                }
+                else if (!HasErrors)
+                {
+                    int currentFileOffset = 0;
 
-                ParseCustomType(typeToParse, ref currentFileOffset, fileSpec.File.Properties);
+                    ParseCustomType(typeToParse, ref currentFileOffset, fileSpec.File.Properties);
+                }
+
             }
         }
 
@@ -239,6 +262,12 @@ namespace binary_viewer.Script
             }
 
             return arrayLength;
+        }
+
+        private void WriteNewError(string error)
+        {
+            errorText += $"{error}\r\n";
+            errorsFound.Add(error);
         }
     }
 }
