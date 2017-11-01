@@ -7,3 +7,45 @@
 - Missing a file name knocks the whole thing out of whack! Need a proper error!
 
 - text dump of pointers needs implementing properly
+
+
+
+How to use C# for Binary Ninja
+
+Parsing types  - easy, define your types and reflect in
+How to run script to decompose a variable. Use my script to do the variable parse
+special markup to parse a block of memory with a custom function
+parse the whole file with entirely custom code - provide an inteface object where uses can add their own view objects the file view.
+
+Can C# tags do the markup for us. We just need to know when to parse a variable using code rather than a default view type.....what if
+they have to implement a custom interface object. If one of those is found in the script, rather than adding my own view object, I call their code
+passing in where we are and a way to add view objects + the actual file data and they can take care of it.
+
+So should my viewer simply be a front end for a file. Provide simple hard coded struct style functionality - anything that C# can compile validly with 
+no hacks or workarounds, but all advanced functionality, e.g. dynamic length arrays, pointers etc are all handled by user scripts....
+
+
+
+Current functionality:
+- Simple type list
+- Structs
+- Structs of structs
+- Arrays
+- Dynamic length arrays
+- Pointers
+- Unordered definition of structs
+
+Ok, maybe pointers can be an intrinsic type - lets pretend we're in C++ land.
+Provide a full interface for defining custom types too - so client scripts can write their own version of an int parser if they want.
+Or their own string parser to cope with weird and wonderful character encodings.
+
+Actually what the hell do we do with strings.... Three types, fixed length, dynamic length where the length is in the file, delimited length,
+where a special character defines the end.
+Just deal with the delimited and fixed length. Variable but defined length is a file specific thing. They can write a parser to do that bit themselves.
+
+Is there a way to deal with ascociating files with scripts....perhaps a map file in the applications folder with specifies specific names and scripts
+or name formats and scripts...or put the script next to the file with the same name....Maybe a "script project" type idea. You can load a script project
+and it contains all of the ascociations and scripts you've setup. So you can just open files and it can find the script. If you're running without a 
+project then you have to manually choose both.
+
+Maybe need to seperate the parsable types (the "model") from the displayable types?
