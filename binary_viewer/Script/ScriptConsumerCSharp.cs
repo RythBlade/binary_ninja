@@ -230,17 +230,20 @@ namespace binary_viewer.Script
                                     {
                                         case Spec.ValueType.eInt32:
                                             arrayLength = valueSpec.GetAsInt32();
+                                            // error on negative value
                                             break;
                                         case Spec.ValueType.eUnsignedInt32:
                                             arrayLength = (int)valueSpec.GetAsUint32();
                                             break;
                                         case Spec.ValueType.eInt64:
+                                            // error on negative value
                                             arrayLength = (int)valueSpec.GetAsInt64();
                                             break;
                                         case Spec.ValueType.eUnsignedInt64:
                                             arrayLength = (int)valueSpec.GetAsUint64();
                                             break;
                                         case Spec.ValueType.eChar:
+                                            // error on negative value
                                             arrayLength = (int)valueSpec.GetAsChar();
                                             break;
                                         case Spec.ValueType.eString:
@@ -249,6 +252,7 @@ namespace binary_viewer.Script
                                         case Spec.ValueType.eDouble:
                                         default:
                                             // error, incompatible or unknown type
+                                            WriteNewError($"Attempting to use an incompatible value \'{valueSpec.Name}\' of type \'{valueSpec.TypeOfValue.ToString()}\' as an array length. Ensure type is an integer type");
                                             break;
                                     }
                                 }
