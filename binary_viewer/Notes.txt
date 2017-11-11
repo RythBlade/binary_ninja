@@ -28,6 +28,12 @@ no hacks or workarounds, but all advanced functionality, e.g. dynamic length arr
 
 
 
+Hex view:
+Can click on bytes and it will show you which lines of the script file they correspond to. Likewise, you can click on cells and specify what type they are and it'll be added to the script.
+So you can investigate bytes you're interested in and ignore everything else, or just to debug a selection of bytes.
+
+
+
 Current functionality:
 - Simple type list
 - Structs
