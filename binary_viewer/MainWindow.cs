@@ -33,6 +33,19 @@ namespace binary_viewer
             Text = "Binary Ninja";
 
             InitializeComponent();
+
+            ResizeBegin += MainWindow_ResizeBegin;
+            ResizeEnd += MainWindow_ResizeEnd;
+        }
+
+        private void MainWindow_ResizeEnd(object sender, EventArgs e)
+        {
+            ResumeLayout();
+        }
+
+        private void MainWindow_ResizeBegin(object sender, EventArgs e)
+        {
+            SuspendLayout();
         }
 
         private void newLoadingDialogue_FormClosed(object sender, FormClosedEventArgs e)
@@ -388,6 +401,7 @@ namespace binary_viewer
                     outputWindowTextBox.Text = parserPayload.FileSpecToPopulate.PrintFile();
                     fileDisplayPropertyGrid.SelectedObject = parserPayload.FileSpecToPopulate;
                     scriptViewTextBox.Text = m_scriptBuffer;
+                    hexGridView.DataBufferToDisplay = parserPayload.FileSpecToPopulate.FileBuffer;
 
                     WriteMessageToErrorOutputWindow(parserPayload.ScriptConsumerToUse.ErrorOutput);
                 }

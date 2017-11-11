@@ -48,10 +48,14 @@
             this.outputWindowTextBox = new System.Windows.Forms.RichTextBox();
             this.scriptDisplayTabPage = new System.Windows.Forms.TabPage();
             this.scriptViewTextBox = new System.Windows.Forms.RichTextBox();
-            this.consoleOutputWindow = new System.Windows.Forms.RichTextBox();
             this.targetFileLoad_backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.targetSpecLoad_backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.finalise_backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.memoryTabPage = new System.Windows.Forms.TabPage();
+            this.consoleOutputWindow = new System.Windows.Forms.RichTextBox();
+            this.consoleTabPage = new System.Windows.Forms.TabPage();
+            this.hexGridView = new binary_viewer.Controls.HexGridView();
             this.maintMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -61,6 +65,9 @@
             this.gridDisplayTabPage.SuspendLayout();
             this.outputWindowTabPage.SuspendLayout();
             this.scriptDisplayTabPage.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.memoryTabPage.SuspendLayout();
+            this.consoleTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // maintMenuStrip
@@ -154,7 +161,7 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.consoleOutputWindow);
+            this.splitContainer2.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer2.Size = new System.Drawing.Size(1056, 475);
             this.splitContainer2.SplitterDistance = 363;
             this.splitContainer2.TabIndex = 3;
@@ -186,6 +193,7 @@
             // 
             this.fileDisplayPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fileDisplayPropertyGrid.HelpVisible = false;
+            this.fileDisplayPropertyGrid.LineColor = System.Drawing.SystemColors.ControlDark;
             this.fileDisplayPropertyGrid.Location = new System.Drawing.Point(3, 3);
             this.fileDisplayPropertyGrid.Name = "fileDisplayPropertyGrid";
             this.fileDisplayPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.NoSort;
@@ -236,18 +244,6 @@
             this.scriptViewTextBox.TabIndex = 0;
             this.scriptViewTextBox.Text = "";
             // 
-            // consoleOutputWindow
-            // 
-            this.consoleOutputWindow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.consoleOutputWindow.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.consoleOutputWindow.ForeColor = System.Drawing.Color.Red;
-            this.consoleOutputWindow.Location = new System.Drawing.Point(0, 0);
-            this.consoleOutputWindow.Name = "consoleOutputWindow";
-            this.consoleOutputWindow.ReadOnly = true;
-            this.consoleOutputWindow.Size = new System.Drawing.Size(1056, 108);
-            this.consoleOutputWindow.TabIndex = 0;
-            this.consoleOutputWindow.Text = "";
-            // 
             // targetFileLoad_backgroundWorker
             // 
             this.targetFileLoad_backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
@@ -262,6 +258,60 @@
             // 
             this.finalise_backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.finalise_backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.memoryTabPage);
+            this.tabControl1.Controls.Add(this.consoleTabPage);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(1056, 108);
+            this.tabControl1.TabIndex = 1;
+            // 
+            // memoryTabPage
+            // 
+            this.memoryTabPage.Controls.Add(this.hexGridView);
+            this.memoryTabPage.Location = new System.Drawing.Point(4, 22);
+            this.memoryTabPage.Name = "memoryTabPage";
+            this.memoryTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.memoryTabPage.Size = new System.Drawing.Size(1048, 82);
+            this.memoryTabPage.TabIndex = 0;
+            this.memoryTabPage.Text = "Memory View";
+            this.memoryTabPage.UseVisualStyleBackColor = true;
+            // 
+            // consoleOutputWindow
+            // 
+            this.consoleOutputWindow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.consoleOutputWindow.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.consoleOutputWindow.ForeColor = System.Drawing.Color.Red;
+            this.consoleOutputWindow.Location = new System.Drawing.Point(3, 3);
+            this.consoleOutputWindow.Name = "consoleOutputWindow";
+            this.consoleOutputWindow.ReadOnly = true;
+            this.consoleOutputWindow.Size = new System.Drawing.Size(1042, 76);
+            this.consoleOutputWindow.TabIndex = 0;
+            this.consoleOutputWindow.Text = "";
+            // 
+            // consoleTabPage
+            // 
+            this.consoleTabPage.Controls.Add(this.consoleOutputWindow);
+            this.consoleTabPage.Location = new System.Drawing.Point(4, 22);
+            this.consoleTabPage.Name = "consoleTabPage";
+            this.consoleTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.consoleTabPage.Size = new System.Drawing.Size(1048, 82);
+            this.consoleTabPage.TabIndex = 1;
+            this.consoleTabPage.Text = "Output";
+            this.consoleTabPage.UseVisualStyleBackColor = true;
+            // 
+            // hexGridView
+            // 
+            this.hexGridView.DataBufferToDisplay = null;
+            this.hexGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.hexGridView.Location = new System.Drawing.Point(3, 3);
+            this.hexGridView.Name = "hexGridView";
+            this.hexGridView.Size = new System.Drawing.Size(1042, 76);
+            this.hexGridView.TabIndex = 0;
             // 
             // MainWindow
             // 
@@ -284,6 +334,9 @@
             this.gridDisplayTabPage.ResumeLayout(false);
             this.outputWindowTabPage.ResumeLayout(false);
             this.scriptDisplayTabPage.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.memoryTabPage.ResumeLayout(false);
+            this.consoleTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -299,7 +352,6 @@
         private System.Windows.Forms.ToolStripMenuItem refreshDataMenuItem;
         private System.Windows.Forms.SaveFileDialog saveTestFileDialogue;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.RichTextBox consoleOutputWindow;
         private System.Windows.Forms.TabControl mainTabControl;
         private System.Windows.Forms.TabPage gridDisplayTabPage;
         private System.Windows.Forms.PropertyGrid fileDisplayPropertyGrid;
@@ -313,6 +365,11 @@
         private System.ComponentModel.BackgroundWorker targetFileLoad_backgroundWorker;
         private System.ComponentModel.BackgroundWorker targetSpecLoad_backgroundWorker;
         private System.ComponentModel.BackgroundWorker finalise_backgroundWorker;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage memoryTabPage;
+        private System.Windows.Forms.TabPage consoleTabPage;
+        private System.Windows.Forms.RichTextBox consoleOutputWindow;
+        private Controls.HexGridView hexGridView;
     }
 }
 

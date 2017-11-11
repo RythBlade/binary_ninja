@@ -9,6 +9,7 @@ namespace binary_viewer.Spec
         private byte[] fileBuffer;
         private int indexOfFirstByte;
 
+        [BrowsableAttribute(false)]
         public byte[] FileBuffer { get { return fileBuffer; } }
 
         [BrowsableAttribute(false)]
