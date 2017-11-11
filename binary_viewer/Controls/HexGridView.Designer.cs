@@ -65,6 +65,7 @@
             this.hexView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.hexView.Location = new System.Drawing.Point(0, 0);
             this.hexView.Name = "hexView";
+            this.hexView.RowHeadersWidth = 50;
             this.hexView.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.hexView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.hexView.Size = new System.Drawing.Size(110, 182);

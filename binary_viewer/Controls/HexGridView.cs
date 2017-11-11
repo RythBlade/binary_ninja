@@ -41,29 +41,14 @@ namespace binary_viewer.Controls
         {
             InitializeComponent();
 
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // do some context specific settings in code so they're easier to keep track over rather than using the designer
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
             // centre the splitter
-            splitContainer.SplitterDistance = splitContainer.Size.Width / 2;
+            splitContainer.SplitterDistance = (splitContainer.Size.Width - splitContainer.SplitterWidth) / 2;
             splitContainer.IsSplitterFixed = true;
-            
-            hexView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            hexView.RowTemplate.Resizable = DataGridViewTriState.False;
-            hexView.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            hexView.AllowUserToAddRows = false;
-            hexView.AllowUserToDeleteRows = false;
-            hexView.ColumnHeadersVisible = false;
 
-            dataView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dataView.RowTemplate.Resizable = DataGridViewTriState.False;
-            dataView.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            dataView.AllowUserToAddRows = false;
-            dataView.AllowUserToDeleteRows = false;
-            dataView.ColumnHeadersVisible = false;
+            Resize += HexGridView_Resize;
 
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            SetupCustomGridViewControlSettings(hexView);
+            SetupCustomGridViewControlSettings(dataView);            
 
             hexView.Resize += DataGridView_Resize;
             dataView.Resize += DataGridView_Resize;
@@ -72,6 +57,29 @@ namespace binary_viewer.Controls
             dataView.Scroll += DataView_Scroll;
             
             RefreshAllData();
+        }
+
+        private void HexGridView_Resize(object sender, EventArgs e)
+        {
+            splitContainer.SplitterDistance = (splitContainer.Size.Width - splitContainer.SplitterWidth) / 2;
+        }
+
+        private void SetupCustomGridViewControlSettings(DataGridView gridView)
+        {
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // do some context specific settings in code so they're easier to keep track over rather than using the designer
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            gridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            gridView.RowTemplate.Resizable = DataGridViewTriState.False;
+            gridView.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            gridView.AllowUserToAddRows = false;
+            gridView.AllowUserToDeleteRows = false;
+            gridView.ColumnHeadersVisible = false;
+            gridView.RowHeadersWidth = 50;
+            gridView.RowTemplate.Resizable = DataGridViewTriState.False;
+            
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
 
         private void RefreshAllData()
@@ -198,6 +206,8 @@ namespace binary_viewer.Controls
                 // write the data from the buffer into the grid, cell by cell in the appropriate format
                 foreach (DataGridViewRow row in gridView.Rows)
                 {
+                    row.HeaderCell.Value = dataItemsWritten.ToString("X");
+
                     int columnId = 0;
                     foreach (DataGridViewColumn column in gridView.Columns)
                     {
@@ -221,6 +231,8 @@ namespace binary_viewer.Controls
                 // write the data from the buffer into the grid, cell by cell in the appropriate format
                 foreach (DataGridViewRow row in gridView.Rows)
                 {
+                    row.HeaderCell.Value = dataItemsWritten.ToString("X");
+
                     int columnId = 0;
                     foreach (DataGridViewColumn column in gridView.Columns)
                     {

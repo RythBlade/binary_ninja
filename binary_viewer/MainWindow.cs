@@ -237,6 +237,7 @@ namespace binary_viewer
             outputWindowTextBox.Text = string.Empty;
             consoleOutputWindow.Text = string.Empty;
             fileDisplayPropertyGrid.SelectedObject = null;
+            hexGridView.DataBufferToDisplay = null;
             scriptViewTextBox.Text = string.Empty;
 
             Text = "Binary Ninja";
@@ -391,6 +392,7 @@ namespace binary_viewer
                     outputWindowTextBox.Text = string.Empty;
                     fileDisplayPropertyGrid.SelectedObject = null;
                     scriptViewTextBox.Text = m_scriptBuffer;
+                    hexGridView.DataBufferToDisplay = null;
 
                     WriteMessageToErrorOutputWindow(parserPayload.ScriptConsumerToUse.ErrorOutput);
                 }
@@ -426,6 +428,7 @@ namespace binary_viewer
                 m_fileSpec = null;
                 outputWindowTextBox.Text = string.Empty;
                 fileDisplayPropertyGrid.SelectedObject = null;
+                hexGridView.DataBufferToDisplay = null;
                 scriptViewTextBox.Text = string.Empty;
 
                 WriteMessageToErrorOutputWindow("It went really wrong!");
