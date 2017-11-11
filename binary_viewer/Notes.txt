@@ -34,6 +34,10 @@ Can click on bytes and it will show you which lines of the script file they corr
 So you can investigate bytes you're interested in and ignore everything else, or just to debug a selection of bytes.
 
 
+Known bugs:
+There's something going on when you refresh the data and it's not updating the hex view properly, nor the grid view. Some times it doesn't put enough data in....sometimes it
+points too many bits of data in wierd offsets....
+
 
 Current functionality:
 - Simple type list
