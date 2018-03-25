@@ -1,0 +1,5 @@
+public class Main
+{
+	[BnArray( 100 )]
+	public char m_byteArray;
+}
