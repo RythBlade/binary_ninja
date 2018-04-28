@@ -77,7 +77,7 @@ namespace binary_viewer.Controls
             gridView.AllowUserToDeleteRows = false;
             gridView.ColumnHeadersVisible = false;
             gridView.RowHeadersWidth = 50;
-            gridView.RowTemplate.Resizable = DataGridViewTriState.False;
+            gridView.AutoSize = false;
             
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
