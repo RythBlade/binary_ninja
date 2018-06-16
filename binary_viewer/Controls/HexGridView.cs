@@ -57,6 +57,8 @@ namespace binary_viewer.Controls
             dataView.Scroll += DataView_Scroll;
             
             RefreshAllData();
+
+            Be.Windows.Forms.HexBox hexBox;
         }
 
         private void HexGridView_Resize(object sender, EventArgs e)
