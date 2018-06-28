@@ -76,11 +76,18 @@
     <Compile Include="Controls\HexGridView.Designer.cs">
       <DependentUpon>HexGridView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\HexGridViewSettings.cs" />
     <Compile Include="Converters\ArraySpecConverter.cs" />
     <Compile Include="Converters\OffsetPointerSpecConverter.cs" />
     <Compile Include="Converters\PropertySpecConverter.cs" />
     <Compile Include="Converters\PropertySpecPropertyDescripton.cs" />
     <Compile Include="Converters\StructSpecConverter.cs" />
+    <Compile Include="Dialogues\PropertiesDialogue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogues\PropertiesDialogue.Designer.cs">
+      <DependentUpon>PropertiesDialogue.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoadingDialogue.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +117,9 @@
     <Compile Include="Threading\TargetFileLoadPayLoad.cs" />
     <EmbeddedResource Include="Controls\HexGridView.resx">
       <DependentUpon>HexGridView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogues\PropertiesDialogue.resx">
+      <DependentUpon>PropertiesDialogue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoadingDialogue.resx">
       <DependentUpon>LoadingDialogue.cs</DependentUpon>
@@ -156,6 +166,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -5,11 +5,7 @@ namespace binary_viewer.Controls
 {
     public partial class HexGridView : UserControl
     {
-        private static int ColumnWidth = 22;
-
         private byte[] m_dataBufferToDisplay = null;
-        private int m_numberOfColumns = 0;
-        private int m_numberOfRows = 0;
 
         public byte[] DataBufferToDisplay
         {
@@ -30,6 +26,35 @@ namespace binary_viewer.Controls
                 {
                     hexBox.ByteProvider = new Be.Windows.Forms.DynamicByteProvider(m_dataBufferToDisplay);
                 }
+            }
+        }
+
+        public HexGridViewSettings DisplaySettings
+        {
+            get
+            {
+                HexGridViewSettings settings = new HexGridViewSettings();
+
+                settings.BytesPerLine = hexBox.BytesPerLine;
+                settings.ColumnInfoVisible = hexBox.ColumnInfoVisible;
+                settings.GroupSeparatorVisible = hexBox.GroupSeparatorVisible;
+                settings.GroupSize = hexBox.GroupSize;
+                settings.LineInfoVisible = hexBox.LineInfoVisible;
+                settings.StringViewVisible = hexBox.StringViewVisible;
+                settings.UseFixedBytesPerLine = hexBox.UseFixedBytesPerLine;
+
+                return settings;
+            }
+
+            set
+            {
+                hexBox.BytesPerLine = value.BytesPerLine;
+                hexBox.ColumnInfoVisible = value.ColumnInfoVisible;
+                hexBox.GroupSeparatorVisible = value.GroupSeparatorVisible;
+                hexBox.GroupSize = value.GroupSize;
+                hexBox.LineInfoVisible = value.LineInfoVisible;
+                hexBox.StringViewVisible = value.StringViewVisible;
+                hexBox.UseFixedBytesPerLine = value.UseFixedBytesPerLine;
             }
         }
 

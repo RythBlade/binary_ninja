@@ -1,4 +1,6 @@
-﻿using binary_viewer.Script;
+﻿using binary_viewer.Controls;
+using binary_viewer.Dialogues;
+using binary_viewer.Script;
 using binary_viewer.Spec;
 using binary_viewer.Threading;
 using System;
@@ -464,6 +466,16 @@ namespace binary_viewer
             if (m_newLoadingDialogue != null)
             {
                 m_newLoadingDialogue.TriggerCloseLoading();
+            }
+        }
+
+        private void hexDisplaySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HexGridViewSettings settings = hexGridView.DisplaySettings;
+
+            if ( PropertiesDialogue.Show( settings ) == DialogResult.OK)
+            {
+                hexGridView.DisplaySettings = settings;
             }
         }
     }
