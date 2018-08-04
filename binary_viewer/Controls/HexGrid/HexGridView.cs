@@ -98,7 +98,8 @@ namespace binary_viewer.Controls.HexGrid
         
         void FloatMenuItem_Click(object sender, EventArgs e)
         {
-            MarkDataFloat?.Invoke(this, new MarkDataEventArgs() );
+            MarkDataEventArgs eventArts = new MarkDataEventArgs((int)hexBox.SelectionStart, (int)hexBox.SelectionLength);
+            MarkDataFloat?.Invoke(this, eventArts);
         }
     }
 }

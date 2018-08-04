@@ -38,6 +38,13 @@ namespace binary_viewer
 
             ResizeBegin += MainWindow_ResizeBegin;
             ResizeEnd += MainWindow_ResizeEnd;
+
+            hexGridView.MarkDataFloat += HexGridView_MarkDataFloat;
+        }
+
+        private void HexGridView_MarkDataFloat(object sender, MarkDataEventArgs e)
+        {
+            //m_fileSpec.File.
         }
 
         private void MainWindow_ResizeEnd(object sender, EventArgs e)
@@ -162,73 +169,101 @@ namespace binary_viewer
             // clear everything for the hard coded test!
             ResetAllLoadedData();
 
-            DialogResult result = fileSpecOpenFileDialogue.ShowDialog();
+            m_loadedSpecFileName = null;
 
-            if (result == DialogResult.OK)
+            m_scriptBuffer = @"
+                public class Main                     
+                {                                     
+	                public int m_uintOne;             
+	                public int m_uintTwo;             
+	                public int m_uintThree;           
+	                public int m_uintFour;            
+	                public int m_uintFive;            
+	                                                  
+	                public int m_floatOne;            
+	                public int m_floatTwo;            
+	                public int m_floatThree;          
+	                public int m_floatFour;           
+	                public int m_floatFive;           
+	                                                  
+	                public double doubleOne;          
+	                                                  
+	                public uint uintOne;              
+	                                                  
+	                public long longOne;              
+	                public ulong longTwo;             
+	                                                  
+	                public char characterOne;         
+	                                                  
+	                public char m_arrayLength;        
+	                                                  
+	                [BnArray( ""m_arrayLength"" )]    
+	                public char m_charArray;          
+	                                                  
+	                [BnArray( 10)]                    
+	                public char m_anotherCharArray;   
+                }";
+
+            // write out the hard coded buffer
+            int lengthOfFakeBuffer = 500;
+            m_targetFileBuffer = new byte[lengthOfFakeBuffer];
+
+            using (MemoryStream stream = new MemoryStream(m_targetFileBuffer, 0, lengthOfFakeBuffer))
             {
-                m_loadedSpecFileName = fileSpecOpenFileDialogue.FileName;
-
-                // write out the hard coded buffer
-                int lengthOfFakeBuffer = 500;
-                m_targetFileBuffer = new byte[lengthOfFakeBuffer];
-
-                using (MemoryStream stream = new MemoryStream(m_targetFileBuffer, 0, lengthOfFakeBuffer))
+                using (BinaryWriter binaryWriter = new BinaryWriter(stream))
                 {
-                    using (BinaryWriter binaryWriter = new BinaryWriter(stream))
+                    int nextInt = 0;
+                    nextInt = -0; binaryWriter.Write(nextInt);
+                    nextInt = 1; binaryWriter.Write(nextInt);
+                    nextInt = -2; binaryWriter.Write(nextInt);
+                    nextInt = -3; binaryWriter.Write(nextInt);
+                    nextInt = 4; binaryWriter.Write(nextInt);
+
+                    float nextFloat = 10.0f;
+                    nextFloat = 10.0f; binaryWriter.Write(nextFloat);
+                    nextFloat = 11.0f; binaryWriter.Write(nextFloat);
+                    nextFloat = 12.0f; binaryWriter.Write(nextFloat);
+                    nextFloat = 13.0f; binaryWriter.Write(nextFloat);
+                    nextFloat = 14.0f; binaryWriter.Write(nextFloat);
+
+                    for (int i = 0; i < 2; ++i)
                     {
-                        int nextInt = 0;
-                        nextInt = -0; binaryWriter.Write(nextInt);
-                        nextInt = 1; binaryWriter.Write(nextInt);
-                        nextInt = -2; binaryWriter.Write(nextInt);
-                        nextInt = -3; binaryWriter.Write(nextInt);
-                        nextInt = 4; binaryWriter.Write(nextInt);
+                        double nextDouble = 3.0; binaryWriter.Write(nextDouble);
 
-                        float nextFloat = 10.0f;
-                        nextFloat = 10.0f; binaryWriter.Write(nextFloat);
-                        nextFloat = 11.0f; binaryWriter.Write(nextFloat);
-                        nextFloat = 12.0f; binaryWriter.Write(nextFloat);
-                        nextFloat = 13.0f; binaryWriter.Write(nextFloat);
-                        nextFloat = 14.0f; binaryWriter.Write(nextFloat);
+                        uint nextUint = 55; binaryWriter.Write(nextUint);
 
-                        for( int i = 0; i < 2; ++i)
-                        {
-                            double nextDouble = 3.0; binaryWriter.Write(nextDouble);
+                        long nextLong = -56; binaryWriter.Write(nextLong);
+                        ulong nextULong = 57; binaryWriter.Write(nextULong);
 
-                            uint nextUint = 55; binaryWriter.Write(nextUint);
+                        char nextChar = 'c'; binaryWriter.Write(Convert.ToByte(nextChar));
 
-                            long nextLong = -56; binaryWriter.Write(nextLong);
-                            ulong nextULong = 57; binaryWriter.Write(nextULong);
+                        int arrayLength = 7; binaryWriter.Write(arrayLength);
 
-                            char nextChar = 'c'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        // dynamic length array
+                        nextChar = 'm'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'u'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'z'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'z'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'i'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'l'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'y'; binaryWriter.Write(Convert.ToByte(nextChar));
 
-                            int arrayLength = 7; binaryWriter.Write(arrayLength);
-
-                            // dynamic length array
-                            nextChar = 'm'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'u'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'z'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'z'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'i'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'l'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'y'; binaryWriter.Write(Convert.ToByte(nextChar));
-
-                            // fixed length array
-                            nextChar = 'd'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'e'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'f'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'g'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'h'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'i'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'j'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'k'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'l'; binaryWriter.Write(Convert.ToByte(nextChar));
-                            nextChar = 'm'; binaryWriter.Write(Convert.ToByte(nextChar));
-                        }
+                        // fixed length array
+                        nextChar = 'd'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'e'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'f'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'g'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'h'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'i'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'j'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'k'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'l'; binaryWriter.Write(Convert.ToByte(nextChar));
+                        nextChar = 'm'; binaryWriter.Write(Convert.ToByte(nextChar));
                     }
                 }
-
-                LoadScriptFile();
             }
+
+            FinaliseLoad();
         }
 
         private void ResetAllLoadedData()
