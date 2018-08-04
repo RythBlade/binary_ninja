@@ -1,4 +1,4 @@
-﻿namespace binary_viewer.Controls
+﻿namespace binary_viewer.Controls.HexGrid
 {
     partial class HexGridView
     {
@@ -39,21 +39,21 @@
             this.hexBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.hexBox.GroupSeparatorVisible = true;
             this.hexBox.Location = new System.Drawing.Point(0, 0);
+            this.hexBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.hexBox.Name = "hexBox";
             this.hexBox.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
-            this.hexBox.Size = new System.Drawing.Size(328, 280);
+            this.hexBox.Size = new System.Drawing.Size(219, 182);
             this.hexBox.StringViewVisible = true;
             this.hexBox.TabIndex = 0;
             this.hexBox.VScrollBarVisible = true;
             // 
             // HexGridView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.hexBox);
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "HexGridView";
-            this.Size = new System.Drawing.Size(328, 280);
+            this.Size = new System.Drawing.Size(219, 182);
             this.ResumeLayout(false);
 
         }

@@ -1,4 +1,4 @@
-﻿using binary_viewer.Controls;
+﻿using binary_viewer.Controls.HexGrid;
 using binary_viewer.Dialogues;
 using binary_viewer.Script;
 using binary_viewer.Spec;
