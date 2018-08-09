@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            binary_viewer.Controls.HexGrid.HexGridViewSettings hexGridViewSettings1 = new binary_viewer.Controls.HexGrid.HexGridViewSettings();
+            binary_viewer.Controls.HexGrid.HexGridViewSettings hexGridViewSettings2 = new binary_viewer.Controls.HexGrid.HexGridViewSettings();
             this.maintMenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openScriptMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -175,7 +175,8 @@
             // parseScriptToolStripMenuItem
             // 
             this.parseScriptToolStripMenuItem.Name = "parseScriptToolStripMenuItem";
-            this.parseScriptToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.parseScriptToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.parseScriptToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.parseScriptToolStripMenuItem.Text = "Parse script...";
             this.parseScriptToolStripMenuItem.Click += new System.EventHandler(this.parseScriptButton_Click);
             // 
@@ -340,14 +341,14 @@
             // hexGridView
             // 
             this.hexGridView.DataBufferToDisplay = null;
-            hexGridViewSettings1.BytesPerLine = 16;
-            hexGridViewSettings1.ColumnInfoVisible = true;
-            hexGridViewSettings1.GroupSeparatorVisible = true;
-            hexGridViewSettings1.GroupSize = 4;
-            hexGridViewSettings1.LineInfoVisible = false;
-            hexGridViewSettings1.StringViewVisible = true;
-            hexGridViewSettings1.UseFixedBytesPerLine = false;
-            this.hexGridView.DisplaySettings = hexGridViewSettings1;
+            hexGridViewSettings2.BytesPerLine = 16;
+            hexGridViewSettings2.ColumnInfoVisible = true;
+            hexGridViewSettings2.GroupSeparatorVisible = true;
+            hexGridViewSettings2.GroupSize = 4;
+            hexGridViewSettings2.LineInfoVisible = false;
+            hexGridViewSettings2.StringViewVisible = true;
+            hexGridViewSettings2.UseFixedBytesPerLine = false;
+            this.hexGridView.DisplaySettings = hexGridViewSettings2;
             this.hexGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.hexGridView.Location = new System.Drawing.Point(3, 3);
             this.hexGridView.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
