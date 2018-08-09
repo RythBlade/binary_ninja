@@ -7,7 +7,7 @@
 - Missing a file name knocks the whole thing out of whack! Need a proper error!
 - Can you snoop processor memory?
 
-- Need to support byte order swapping (for different platforms data formats)
+- Need to support endian-ness swapping (for different platforms data formats)
 - Dynamic scipt editor
 
 - text dump of pointers needs implementing properly
