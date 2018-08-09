@@ -28,29 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            binary_viewer.Controls.HexGrid.HexGridViewSettings hexGridViewSettings1 = new binary_viewer.Controls.HexGrid.HexGridViewSettings();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
+            binary_viewer.Controls.HexGrid.HexGridViewSettings hexGridViewSettings1 = new binary_viewer.Controls.HexGrid.HexGridViewSettings();
             this.maintMenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openScriptMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openTargetFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hexDisplaySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshDataMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugButtonsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toHardCodedTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.writeTestItemMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hexDisplaySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.scriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.parseScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileSpecOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
             this.targetFileOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
             this.saveTestFileDialogue = new System.Windows.Forms.SaveFileDialog();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.mainTabControl = new System.Windows.Forms.TabControl();
             this.gridDisplayTabPage = new System.Windows.Forms.TabPage();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.fileDisplayPropertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.parseScriptButton = new System.Windows.Forms.ToolStripButton();
+            this.scriptViewTextBox = new System.Windows.Forms.RichTextBox();
             this.outputWindowTabPage = new System.Windows.Forms.TabPage();
             this.outputWindowTextBox = new System.Windows.Forms.RichTextBox();
-            this.scriptDisplayTabPage = new System.Windows.Forms.TabPage();
-            this.scriptViewTextBox = new System.Windows.Forms.RichTextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.memoryTabPage = new System.Windows.Forms.TabPage();
             this.hexGridView = new binary_viewer.Controls.HexGrid.HexGridView();
@@ -66,8 +70,12 @@
             this.splitContainer2.SuspendLayout();
             this.mainTabControl.SuspendLayout();
             this.gridDisplayTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.outputWindowTabPage.SuspendLayout();
-            this.scriptDisplayTabPage.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.memoryTabPage.SuspendLayout();
             this.consoleTabPage.SuspendLayout();
@@ -79,6 +87,7 @@
             this.maintMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenuItem,
             this.editToolStripMenuItem,
+            this.scriptToolStripMenuItem,
             this.refreshDataMenuItem,
             this.debugButtonsToolStripMenuItem});
             this.maintMenuStrip.Location = new System.Drawing.Point(0, 0);
@@ -110,6 +119,21 @@
             this.openTargetFileMenuItem.Text = "Open Target File...";
             this.openTargetFileMenuItem.Click += new System.EventHandler(this.openTargetFileMenuItem_Click);
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.hexDisplaySettingsToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // hexDisplaySettingsToolStripMenuItem
+            // 
+            this.hexDisplaySettingsToolStripMenuItem.Name = "hexDisplaySettingsToolStripMenuItem";
+            this.hexDisplaySettingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hexDisplaySettingsToolStripMenuItem.Text = "Hex Display Settings";
+            this.hexDisplaySettingsToolStripMenuItem.Click += new System.EventHandler(this.hexDisplaySettingsToolStripMenuItem_Click);
+            // 
             // refreshDataMenuItem
             // 
             this.refreshDataMenuItem.Name = "refreshDataMenuItem";
@@ -140,20 +164,20 @@
             this.writeTestItemMenuItem.Text = "Write Test Item...";
             this.writeTestItemMenuItem.Click += new System.EventHandler(this.writeTestItemMenuItem_Click_1);
             // 
-            // editToolStripMenuItem
+            // scriptToolStripMenuItem
             // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.hexDisplaySettingsToolStripMenuItem});
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem.Text = "Edit";
+            this.scriptToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.parseScriptToolStripMenuItem});
+            this.scriptToolStripMenuItem.Name = "scriptToolStripMenuItem";
+            this.scriptToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
+            this.scriptToolStripMenuItem.Text = "Script";
             // 
-            // hexDisplaySettingsToolStripMenuItem
+            // parseScriptToolStripMenuItem
             // 
-            this.hexDisplaySettingsToolStripMenuItem.Name = "hexDisplaySettingsToolStripMenuItem";
-            this.hexDisplaySettingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.hexDisplaySettingsToolStripMenuItem.Text = "Hex Display Settings";
-            this.hexDisplaySettingsToolStripMenuItem.Click += new System.EventHandler(this.hexDisplaySettingsToolStripMenuItem_Click);
+            this.parseScriptToolStripMenuItem.Name = "parseScriptToolStripMenuItem";
+            this.parseScriptToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.parseScriptToolStripMenuItem.Text = "Parse script...";
+            this.parseScriptToolStripMenuItem.Click += new System.EventHandler(this.parseScriptButton_Click);
             // 
             // fileSpecOpenFileDialogue
             // 
@@ -190,7 +214,6 @@
             // 
             this.mainTabControl.Controls.Add(this.gridDisplayTabPage);
             this.mainTabControl.Controls.Add(this.outputWindowTabPage);
-            this.mainTabControl.Controls.Add(this.scriptDisplayTabPage);
             this.mainTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTabControl.Location = new System.Drawing.Point(0, 0);
             this.mainTabControl.Name = "mainTabControl";
@@ -200,34 +223,83 @@
             // 
             // gridDisplayTabPage
             // 
-            this.gridDisplayTabPage.Controls.Add(this.fileDisplayPropertyGrid);
+            this.gridDisplayTabPage.Controls.Add(this.splitContainer1);
             this.gridDisplayTabPage.Location = new System.Drawing.Point(4, 22);
             this.gridDisplayTabPage.Name = "gridDisplayTabPage";
-            this.gridDisplayTabPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.gridDisplayTabPage.Padding = new System.Windows.Forms.Padding(3);
             this.gridDisplayTabPage.Size = new System.Drawing.Size(1048, 336);
             this.gridDisplayTabPage.TabIndex = 0;
             this.gridDisplayTabPage.Text = "Grid Data Display";
             this.gridDisplayTabPage.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.fileDisplayPropertyGrid);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.toolStrip1);
+            this.splitContainer1.Panel2.Controls.Add(this.scriptViewTextBox);
+            this.splitContainer1.Size = new System.Drawing.Size(1042, 330);
+            this.splitContainer1.SplitterDistance = 486;
+            this.splitContainer1.TabIndex = 1;
             // 
             // fileDisplayPropertyGrid
             // 
             this.fileDisplayPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fileDisplayPropertyGrid.HelpVisible = false;
             this.fileDisplayPropertyGrid.LineColor = System.Drawing.SystemColors.ControlDark;
-            this.fileDisplayPropertyGrid.Location = new System.Drawing.Point(3, 3);
+            this.fileDisplayPropertyGrid.Location = new System.Drawing.Point(0, 0);
             this.fileDisplayPropertyGrid.Name = "fileDisplayPropertyGrid";
             this.fileDisplayPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-            this.fileDisplayPropertyGrid.Size = new System.Drawing.Size(1042, 330);
+            this.fileDisplayPropertyGrid.Size = new System.Drawing.Size(486, 330);
             this.fileDisplayPropertyGrid.TabIndex = 0;
             this.fileDisplayPropertyGrid.ToolbarVisible = false;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.parseScriptButton});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(552, 25);
+            this.toolStrip1.TabIndex = 1;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // parseScriptButton
+            // 
+            this.parseScriptButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.parseScriptButton.Image = ((System.Drawing.Image)(resources.GetObject("parseScriptButton.Image")));
+            this.parseScriptButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.parseScriptButton.Name = "parseScriptButton";
+            this.parseScriptButton.Size = new System.Drawing.Size(72, 22);
+            this.parseScriptButton.Text = "Parse Script";
+            this.parseScriptButton.Click += new System.EventHandler(this.parseScriptButton_Click);
+            // 
+            // scriptViewTextBox
+            // 
+            this.scriptViewTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.scriptViewTextBox.Location = new System.Drawing.Point(0, 28);
+            this.scriptViewTextBox.Name = "scriptViewTextBox";
+            this.scriptViewTextBox.Size = new System.Drawing.Size(552, 299);
+            this.scriptViewTextBox.TabIndex = 0;
+            this.scriptViewTextBox.Text = "";
             // 
             // outputWindowTabPage
             // 
             this.outputWindowTabPage.Controls.Add(this.outputWindowTextBox);
             this.outputWindowTabPage.Location = new System.Drawing.Point(4, 22);
             this.outputWindowTabPage.Name = "outputWindowTabPage";
-            this.outputWindowTabPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.outputWindowTabPage.Size = new System.Drawing.Size(1048, 338);
+            this.outputWindowTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.outputWindowTabPage.Size = new System.Drawing.Size(1048, 336);
             this.outputWindowTabPage.TabIndex = 1;
             this.outputWindowTabPage.Text = "Text Data Display";
             this.outputWindowTabPage.UseVisualStyleBackColor = true;
@@ -239,30 +311,9 @@
             this.outputWindowTextBox.Location = new System.Drawing.Point(3, 3);
             this.outputWindowTextBox.Name = "outputWindowTextBox";
             this.outputWindowTextBox.ReadOnly = true;
-            this.outputWindowTextBox.Size = new System.Drawing.Size(1042, 332);
+            this.outputWindowTextBox.Size = new System.Drawing.Size(1042, 330);
             this.outputWindowTextBox.TabIndex = 0;
             this.outputWindowTextBox.Text = "";
-            // 
-            // scriptDisplayTabPage
-            // 
-            this.scriptDisplayTabPage.Controls.Add(this.scriptViewTextBox);
-            this.scriptDisplayTabPage.Location = new System.Drawing.Point(4, 22);
-            this.scriptDisplayTabPage.Name = "scriptDisplayTabPage";
-            this.scriptDisplayTabPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.scriptDisplayTabPage.Size = new System.Drawing.Size(1048, 338);
-            this.scriptDisplayTabPage.TabIndex = 2;
-            this.scriptDisplayTabPage.Text = "Script Display";
-            this.scriptDisplayTabPage.UseVisualStyleBackColor = true;
-            // 
-            // scriptViewTextBox
-            // 
-            this.scriptViewTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptViewTextBox.Location = new System.Drawing.Point(3, 3);
-            this.scriptViewTextBox.Name = "scriptViewTextBox";
-            this.scriptViewTextBox.ReadOnly = true;
-            this.scriptViewTextBox.Size = new System.Drawing.Size(1042, 332);
-            this.scriptViewTextBox.TabIndex = 0;
-            this.scriptViewTextBox.Text = "";
             // 
             // tabControl1
             // 
@@ -280,7 +331,7 @@
             this.memoryTabPage.Controls.Add(this.hexGridView);
             this.memoryTabPage.Location = new System.Drawing.Point(4, 22);
             this.memoryTabPage.Name = "memoryTabPage";
-            this.memoryTabPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.memoryTabPage.Padding = new System.Windows.Forms.Padding(3);
             this.memoryTabPage.Size = new System.Drawing.Size(1048, 83);
             this.memoryTabPage.TabIndex = 0;
             this.memoryTabPage.Text = "Memory View";
@@ -309,7 +360,7 @@
             this.consoleTabPage.Controls.Add(this.consoleOutputWindow);
             this.consoleTabPage.Location = new System.Drawing.Point(4, 22);
             this.consoleTabPage.Name = "consoleTabPage";
-            this.consoleTabPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.consoleTabPage.Padding = new System.Windows.Forms.Padding(3);
             this.consoleTabPage.Size = new System.Drawing.Size(1048, 83);
             this.consoleTabPage.TabIndex = 1;
             this.consoleTabPage.Text = "Output";
@@ -361,8 +412,14 @@
             this.splitContainer2.ResumeLayout(false);
             this.mainTabControl.ResumeLayout(false);
             this.gridDisplayTabPage.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.outputWindowTabPage.ResumeLayout(false);
-            this.scriptDisplayTabPage.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.memoryTabPage.ResumeLayout(false);
             this.consoleTabPage.ResumeLayout(false);
@@ -381,13 +438,6 @@
         private System.Windows.Forms.ToolStripMenuItem refreshDataMenuItem;
         private System.Windows.Forms.SaveFileDialog saveTestFileDialogue;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.TabControl mainTabControl;
-        private System.Windows.Forms.TabPage gridDisplayTabPage;
-        private System.Windows.Forms.PropertyGrid fileDisplayPropertyGrid;
-        private System.Windows.Forms.TabPage outputWindowTabPage;
-        private System.Windows.Forms.RichTextBox outputWindowTextBox;
-        private System.Windows.Forms.TabPage scriptDisplayTabPage;
-        private System.Windows.Forms.RichTextBox scriptViewTextBox;
         private System.Windows.Forms.ToolStripMenuItem debugButtonsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toHardCodedTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem writeTestItemMenuItem;
@@ -401,6 +451,17 @@
         private Controls.HexGrid.HexGridView hexGridView;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hexDisplaySettingsToolStripMenuItem;
+        private System.Windows.Forms.TabControl mainTabControl;
+        private System.Windows.Forms.TabPage gridDisplayTabPage;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.PropertyGrid fileDisplayPropertyGrid;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton parseScriptButton;
+        private System.Windows.Forms.RichTextBox scriptViewTextBox;
+        private System.Windows.Forms.TabPage outputWindowTabPage;
+        private System.Windows.Forms.RichTextBox outputWindowTextBox;
+        private System.Windows.Forms.ToolStripMenuItem scriptToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem parseScriptToolStripMenuItem;
     }
 }
 

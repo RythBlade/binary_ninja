@@ -103,7 +103,6 @@ namespace binary_viewer.Script
 
                     ParseCustomType(typeToParse, ref currentFileOffset, fileSpec.File.Properties);
                 }
-
             }
         }
 

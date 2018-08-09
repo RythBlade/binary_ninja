@@ -70,13 +70,8 @@ namespace binary_viewer
             if( result == DialogResult.OK )
             {
                 m_loadedSpecFileName = fileSpecOpenFileDialogue.FileName;
+                LoadScriptFile();
             }
-            else
-            {
-                m_loadedSpecFileName = string.Empty;
-            }
-
-            LoadScriptFile();
         }
 
         private void openTargetFileMenuItem_Click(object sender, EventArgs e)
@@ -86,13 +81,8 @@ namespace binary_viewer
             if (result == DialogResult.OK)
             {
                 m_loadedTargetFileName = targetFileOpenFileDialogue.FileName;
+                LoadTargetFile();
             }
-            else
-            {
-                m_loadedTargetFileName = string.Empty;
-            }
-
-            LoadTargetFile();
         }
 
         private void refreshDataMenuItem_Click(object sender, EventArgs e)
@@ -171,38 +161,37 @@ namespace binary_viewer
 
             m_loadedSpecFileName = null;
 
-            m_scriptBuffer = @"
-                public class Main                     
-                {                                     
-	                public int m_uintOne;             
-	                public int m_uintTwo;             
-	                public int m_uintThree;           
-	                public int m_uintFour;            
-	                public int m_uintFive;            
+            m_scriptBuffer = @"public class Main                     
+{                                     
+	public int m_uintOne;             
+	public int m_uintTwo;             
+	public int m_uintThree;           
+	public int m_uintFour;            
+	public int m_uintFive;            
 	                                                  
-	                public int m_floatOne;            
-	                public int m_floatTwo;            
-	                public int m_floatThree;          
-	                public int m_floatFour;           
-	                public int m_floatFive;           
+	public int m_floatOne;            
+	public int m_floatTwo;            
+	public int m_floatThree;          
+	public int m_floatFour;           
+	public int m_floatFive;           
 	                                                  
-	                public double doubleOne;          
+	public double doubleOne;          
 	                                                  
-	                public uint uintOne;              
+	public uint uintOne;              
 	                                                  
-	                public long longOne;              
-	                public ulong longTwo;             
+	public long longOne;              
+	public ulong longTwo;             
 	                                                  
-	                public char characterOne;         
+	public char characterOne;         
 	                                                  
-	                public char m_arrayLength;        
+	public char m_arrayLength;        
 	                                                  
-	                [BnArray( ""m_arrayLength"" )]    
-	                public char m_charArray;          
+	[BnArray( ""m_arrayLength"" )]    
+	public char m_charArray;          
 	                                                  
-	                [BnArray( 10)]                    
-	                public char m_anotherCharArray;   
-                }";
+	[BnArray( 10)]                    
+	public char m_anotherCharArray;   
+}";
 
             // write out the hard coded buffer
             int lengthOfFakeBuffer = 500;
@@ -328,34 +317,43 @@ namespace binary_viewer
             {
                 Text = $"Binar Ninja - [Target File: {Path.GetFileName(m_loadedTargetFileName)}] - [Target Script: {Path.GetFileName(m_loadedSpecFileName)}]";
 
-                if (m_targetFileBuffer != null && m_scriptBuffer != null)
+                ParseScript();
+            }
+        }
+
+        private void ParseScript()
+        {
+            if (m_targetFileBuffer != null && m_scriptBuffer != null)
+            {
+                m_shouldUpdateUIData = false;
+
+                IScriptConsumer consumer = null;
+
+                try
                 {
-                    m_shouldUpdateUIData = false;
+                    FileSpec fileSpec = new FileSpec(m_targetFileBuffer, 0);
+                    //consumer = new ScriptConsumerManual(m_scriptBuffer, fileSpec);
+                    consumer = new ScriptConsumerCSharp(m_scriptBuffer, fileSpec);
+                    ParserPayload workerPayload = new ParserPayload(fileSpec, consumer);
 
-                    //try
+                    ShowLoadingDialogue("Parsing the file...");
+
+                    finalise_backgroundWorker.RunWorkerAsync(workerPayload);
+                }
+                catch (Exception ex)
+                {
+                    if (consumer != null)
                     {
-                        FileSpec fileSpec = new FileSpec(m_targetFileBuffer, 0);
-                        //IScriptConsumer consumer = new ScriptConsumerManual(m_scriptBuffer, fileSpec);
-                        IScriptConsumer consumer = new ScriptConsumerCSharp(m_scriptBuffer, fileSpec);
-                        ParserPayload workerPayload = new ParserPayload(fileSpec, consumer);
-
-                        ShowLoadingDialogue("Parsing the file...");
-
-                        finalise_backgroundWorker.RunWorkerAsync(workerPayload);
+                        WriteMessageToErrorOutputWindow(consumer.ErrorOutput);
                     }
-                    /*catch (Exception ex)
-                    {
-                        if (consumer != null)
-                        {
-                            WriteMessageToErrorOutputWindow(consumer.ErrorOutput);
-                        }
-    #if DEBUG
-                        throw ex;
-    #else
-                        WriteMessageToErrorOutputWindow($"Ok...there was an exception parsing the script file: {ex.Message}");
-                        MessageBox.Show($"Ok...there was an exception parsing the script file: {ex.Message}");
-    #endif
-                    }*/
+#if DEBUG
+                    throw ex; // in debug - we want it rethrown so we can debug
+#else
+                    // this is super bad to just throw the exception away....but....I'd rather it didn't just crash until I see the sorts of 
+                    // errors that come out
+                    WriteMessageToErrorOutputWindow($"Ok...there was an exception parsing the script file: {ex.Message}");
+                    MessageBox.Show($"Ok...there was an exception parsing the script file: {ex.Message}");
+#endif
                 }
             }
         }
@@ -512,6 +510,12 @@ namespace binary_viewer
             {
                 hexGridView.DisplaySettings = settings;
             }
+        }
+
+        private void parseScriptButton_Click(object sender, EventArgs e)
+        {
+            m_scriptBuffer = scriptViewTextBox.Text;
+            ParseScript();
         }
     }
 }
