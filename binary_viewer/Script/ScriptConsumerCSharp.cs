@@ -158,6 +158,14 @@ namespace binary_viewer.Script
             , IList<CustomAttributeData> fieldAttributes
             , List<PropertySpec> listToAddTo)
         {
+
+            // this is the place to determine the array dimensions and pointer-ness.
+            // use an OffsetPointerSpec for pointers. Have 4 pointer types.
+            // at a point in the future could possibly expand the types to be a general number of bytes/bits and we can keep track of how far threw
+            // the file we are....but we don't do file streaming yet, so probably don't need anything capable of counting that high just yet.
+
+
+
             int arrayLength = GetArrayLength(fieldAttributes, listToAddTo);
 
             if(arrayLength > 0)

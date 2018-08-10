@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\BnArray.cs" />
+    <Compile Include="Attributes\BnPointer.cs" />
     <Compile Include="Controls\HexGrid\HexGridView.cs">
       <SubType>UserControl</SubType>
     </Compile>
