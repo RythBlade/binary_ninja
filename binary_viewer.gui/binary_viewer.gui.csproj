@@ -69,15 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\HexGrid\HexGridView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\HexGrid\HexGridView.Designer.cs">
-      <DependentUpon>HexGridView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\HexGrid\HexGridViewSettings.cs" />
-    <Compile Include="Controls\HexGrid\MarkDataEventArgs.cs" />
-    <Compile Include="Controls\HexGrid\MarkDataEventHandler.cs" />
     <Compile Include="Converters\ArraySpecConverter.cs" />
     <Compile Include="Converters\OffsetPointerSpecConverter.cs" />
     <Compile Include="Converters\PropertySpecConverter.cs" />
@@ -106,9 +97,6 @@
     <Compile Include="Threading\ParserPayload.cs" />
     <Compile Include="Threading\ScriptFilePayLoad.cs" />
     <Compile Include="Threading\TargetFileLoadPayLoad.cs" />
-    <EmbeddedResource Include="Controls\HexGrid\HexGridView.resx">
-      <DependentUpon>HexGridView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Dialogues\PropertiesDialogue.resx">
       <DependentUpon>PropertiesDialogue.cs</DependentUpon>
     </EmbeddedResource>
