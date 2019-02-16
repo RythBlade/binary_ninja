@@ -91,10 +91,10 @@
     <Compile Include="Dialogues\PropertiesDialogue.Designer.cs">
       <DependentUpon>PropertiesDialogue.cs</DependentUpon>
     </Compile>
-    <Compile Include="LoadingDialogue.cs">
+    <Compile Include="Dialogues\LoadingDialogue.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoadingDialogue.Designer.cs">
+    <Compile Include="Dialogues\LoadingDialogue.Designer.cs">
       <DependentUpon>LoadingDialogue.cs</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.cs">
@@ -124,7 +124,7 @@
     <EmbeddedResource Include="Dialogues\PropertiesDialogue.resx">
       <DependentUpon>PropertiesDialogue.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoadingDialogue.resx">
+    <EmbeddedResource Include="Dialogues\LoadingDialogue.resx">
       <DependentUpon>LoadingDialogue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
