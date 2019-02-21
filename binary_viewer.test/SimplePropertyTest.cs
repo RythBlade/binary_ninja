@@ -1,9 +1,7 @@
-﻿using System;
+﻿using binary_viewer.Script;
+using binary_viewer.Spec;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using binary_viewer.Script;
-using binary_viewer.Spec;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace binary_viewer.test
 {
