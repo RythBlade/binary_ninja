@@ -162,7 +162,10 @@ namespace binary_viewer
             m_loadedSpecFileName = null;
 
             m_scriptBuffer = @"public class Main                     
-{                                     
+{                    
+    [BnPointer( PointerType.eAddress32 )]
+    public char m_firstCharPointer;
+
 	public int m_uintOne;             
 	public int m_uintTwo;             
 	public int m_uintThree;           
@@ -201,6 +204,8 @@ namespace binary_viewer
             {
                 using (BinaryWriter binaryWriter = new BinaryWriter(stream))
                 {
+                    int testAddress = 0;
+                    binaryWriter.Write(testAddress); // we'll come back to this point below, once we know where the string is :)
                     int nextInt = 0;
                     nextInt = -0; binaryWriter.Write(nextInt);
                     nextInt = 1; binaryWriter.Write(nextInt);
@@ -215,6 +220,7 @@ namespace binary_viewer
                     nextFloat = 13.0f; binaryWriter.Write(nextFloat);
                     nextFloat = 14.0f; binaryWriter.Write(nextFloat);
 
+                    int offsetOfFirstChar = 0;
                     for (int i = 0; i < 2; ++i)
                     {
                         double nextDouble = 3.0; binaryWriter.Write(nextDouble);
@@ -224,6 +230,7 @@ namespace binary_viewer
                         long nextLong = -56; binaryWriter.Write(nextLong);
                         ulong nextULong = 57; binaryWriter.Write(nextULong);
 
+                        offsetOfFirstChar = (int)binaryWriter.BaseStream.Position;
                         char nextChar = 'c'; binaryWriter.Write(Convert.ToByte(nextChar));
 
                         int arrayLength = 7; binaryWriter.Write(arrayLength);
@@ -249,6 +256,9 @@ namespace binary_viewer
                         nextChar = 'l'; binaryWriter.Write(Convert.ToByte(nextChar));
                         nextChar = 'm'; binaryWriter.Write(Convert.ToByte(nextChar));
                     }
+
+                    binaryWriter.Seek(0, SeekOrigin.Begin);
+                    binaryWriter.Write(offsetOfFirstChar);
                 }
             }
 
@@ -265,6 +275,7 @@ namespace binary_viewer
             fileDisplayPropertyGrid.SelectedObject = null;
             hexGridView.DataBufferToDisplay = null;
             scriptViewTextBox.Text = string.Empty;
+            m_shouldUpdateUIData = true;
 
             Text = "Binary Ninja";
         }
