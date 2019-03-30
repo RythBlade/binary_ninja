@@ -164,39 +164,112 @@ namespace binary_viewer.Script
             // at a point in the future could possibly expand the types to be a general number of bytes/bits and we can keep track of how far threw
             // the file we are....but we don't do file streaming yet, so probably don't need anything capable of counting that high just yet.
 
+            OffsetPointerSpec nextPointer = null;
+            for( int i = 0; i < fieldAttributes.Count; ++i)
+            {
+                CustomAttributeData customAttribute = fieldAttributes[i];
+
+                if (customAttribute.AttributeType == typeof(BnPointer))
+                {
+                    if(customAttribute.ConstructorArguments.Count != 1)
+                    {
+                        // don't know if this is necessary! THe c# compiler should do this for us!
+                        WriteNewError( $"Custom attribute {customAttribute.ToString()} found with an incorrect number of arguments. There should only be 1 argument." );
+                        return;
+                    }
+
+                    PointerType pointerType = (PointerType)customAttribute.ConstructorArguments[0].Value;
+
+                    switch (pointerType)
+                    {
+                        case PointerType.ePointer32:
 
 
-            int arrayLength = GetArrayLength(fieldAttributes, listToAddTo);
+                            //calculate a new offset (using the pointer value) if the pointer is already populated!
+
+
+
+
+                            nextPointer = new OffsetPointerSpec(fileBuffer, currentFileOffset, 0);
+                            nextPointer.Name = name;
+
+
+                            // only increment the file offset on the first pointer as any pointers to pointers are navigating the file manually
+                            if (i == 0) { currentFileOffset += 4; }
+                            break;
+                        /*case PointerType.ePointer64:
+                            nextPointer = new OffsetPointerSpec(fileBuffer, currentFileOffset, 0);
+                            currentFileOffset += 8;
+                            break;
+                        case PointerType.eOffset32:
+                            nextPointer = new OffsetPointerSpec(fileBuffer, currentFileOffset, currentFileOffset);
+                            currentFileOffset += 4;
+                            break;
+                        case PointerType.eOffset64:
+                            nextPointer = new OffsetPointerSpec(fileBuffer, currentFileOffset, currentFileOffset);
+                            currentFileOffset += 8;
+                            break;*/
+                        case PointerType.eNotAPointer:
+                        default:
+                            WriteNewError($"Invalid pointer type: {pointerType}");
+                            break;
+                    }
+                }
+            }
+
+            int offSetForStartOfValue = nextPointer == null ? currentFileOffset : nextPointer.OffsetIntoFileOfTarget;
+
+            int arrayLength = 0;//GetArrayLength(fieldAttributes, listToAddTo);
 
             if(arrayLength > 0)
             {
-                ArraySpec array = new ArraySpec(fileBuffer, currentFileOffset, arrayLength);
+                ArraySpec array = new ArraySpec(fileBuffer, offSetForStartOfValue, arrayLength);
                 array.Name = name;
+
+                int arrayTotalLength = 0;
 
                 for(int i = 0; i < arrayLength; ++i)
                 {
-                    ValueSpec value = new ValueSpec(fileBuffer, currentFileOffset);
+                    ValueSpec value = new ValueSpec(fileBuffer, offSetForStartOfValue);
                     value.TypeOfValue = type;
                     value.LengthOfType = lengthOfType;
                     value.Name = name;
 
                     array.PropertyArray[i] = value;
-
-                    currentFileOffset += lengthOfType;
+                    
+                    arrayTotalLength += lengthOfType;
                 }
 
-                listToAddTo.Add(array);
+                if (nextPointer == null)
+                {
+                    currentFileOffset += arrayTotalLength;
+                    listToAddTo.Add(array);
+                }
+                else
+                {
+                    // if we're the child of a pointer, then don't update the file offset as it's already done
+                    nextPointer.Target = array;
+                    listToAddTo.Add(nextPointer);
+                }
             }
             else
             {
-                ValueSpec value = new ValueSpec(fileBuffer, currentFileOffset);
+                ValueSpec value = new ValueSpec(fileBuffer, offSetForStartOfValue);
                 value.TypeOfValue = type;
                 value.LengthOfType = lengthOfType;
                 value.Name = name;
-
-                listToAddTo.Add(value);
-
-                currentFileOffset += lengthOfType;
+                
+                if (nextPointer == null)
+                {
+                    currentFileOffset += lengthOfType;
+                    listToAddTo.Add(value);
+                }
+                else
+                {
+                    // if we're the child of a pointer, then don't update the file offset as it's already done
+                    nextPointer.Target = value;
+                    listToAddTo.Add(nextPointer);
+                }
             }
         }
 
