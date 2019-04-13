@@ -13,12 +13,19 @@ public class MyTestPointer<T>
 
 }
 
+public class AnotherTestTemplate<T>
+{
+
+}
+
 public class BnPointer : Attribute
 {
     public BnPointer(PointerType type)
     {
+        this should be the format for pointers from now on!
         MyTestPointer<float> testing = null;
         MyTestPointer<MyTestPointer<float>> anotherTest = null;
+
     }
 
     public BnPointer(PointerType type, int test)
