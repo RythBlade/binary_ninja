@@ -164,7 +164,8 @@ namespace binary_viewer.Script
             // at a point in the future could possibly expand the types to be a general number of bytes/bits and we can keep track of how far threw
             // the file we are....but we don't do file streaming yet, so probably don't need anything capable of counting that high just yet.
 
-            OffsetPointerSpec nextPointer = null;
+            OffsetPointerSpec nextPointer = null; // points to the newest pointer we've made in the chain
+
             for( int i = 0; i < fieldAttributes.Count; ++i)
             {
                 CustomAttributeData customAttribute = fieldAttributes[i];
@@ -183,17 +184,19 @@ namespace binary_viewer.Script
                     switch (pointerType)
                     {
                         case PointerType.ePointer32:
+                            //calculate a new offset, using the current pointer value, if the pointer is already populated
+                            int fileOffsetToUse = nextPointer == null ? currentFileOffset : nextPointer.OffsetIntoFileOfTarget;
+                            OffsetPointerSpec newPointer = new OffsetPointerSpec(fileBuffer, fileOffsetToUse, 0);
+                            newPointer.Name = name;
 
+                            // add it to the "linked list" of pointers
+                            if (nextPointer != null)
+                            {
+                                nextPointer.Target = newPointer;
+                            }
 
-                            //calculate a new offset (using the pointer value) if the pointer is already populated!
-
-
-
-
-                            nextPointer = new OffsetPointerSpec(fileBuffer, currentFileOffset, 0);
-                            nextPointer.Name = name;
-
-
+                            nextPointer = newPointer;
+                            
                             // only increment the file offset on the first pointer as any pointers to pointers are navigating the file manually
                             if (i == 0) { currentFileOffset += 4; }
                             break;
