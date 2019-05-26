@@ -166,6 +166,15 @@ namespace binary_viewer
     [BnPointer( PointerType.eAddress32 )]
     public char m_firstCharPointer;
 
+    [BnPointer( PointerType.eAddress32)]
+    [BnPointer( PointerType.eAddress32)]
+    public char m_firstCharPointerToPointer;
+
+    [BnPointer( PointerType.eAddress32)]
+    [BnPointer( PointerType.eAddress32)]
+    [BnPointer( PointerType.eAddress32)]
+    public char m_firstCharPointerToPointerToPointer;
+
 	public int m_uintOne;             
 	public int m_uintTwo;             
 	public int m_uintThree;           
@@ -205,7 +214,12 @@ namespace binary_viewer
                 using (BinaryWriter binaryWriter = new BinaryWriter(stream))
                 {
                     int testAddress = 0;
+                    int offsetOfFirstPointer = (int)binaryWriter.BaseStream.Position;
                     binaryWriter.Write(testAddress); // we'll come back to this point below, once we know where the string is :)
+                    int offsetOfFirstPointerToPointer = (int)binaryWriter.BaseStream.Position;
+                    binaryWriter.Write(testAddress);
+                    int offsetOfFirstPointerToPointerToPointer = (int)binaryWriter.BaseStream.Position;
+                    binaryWriter.Write(testAddress);
                     int nextInt = 0;
                     nextInt = -0; binaryWriter.Write(nextInt);
                     nextInt = 1; binaryWriter.Write(nextInt);
@@ -257,8 +271,10 @@ namespace binary_viewer
                         nextChar = 'm'; binaryWriter.Write(Convert.ToByte(nextChar));
                     }
 
-                    binaryWriter.Seek(0, SeekOrigin.Begin);
+                    binaryWriter.Seek(offsetOfFirstPointer, SeekOrigin.Begin);
                     binaryWriter.Write(offsetOfFirstChar);
+                    binaryWriter.Write(offsetOfFirstPointer);
+                    binaryWriter.Write(offsetOfFirstPointerToPointer);
                 }
             }
 
@@ -439,6 +455,8 @@ namespace binary_viewer
                     fileDisplayPropertyGrid.SelectedObject = null;
                     scriptViewTextBox.Text = m_scriptBuffer;
                     hexGridView.DataBufferToDisplay = null;
+                    
+                    secondaryTabControl.SelectTab(consoleTabPage);
 
                     WriteMessageToErrorOutputWindow(parserPayload.ScriptConsumerToUse.ErrorOutput);
                 }

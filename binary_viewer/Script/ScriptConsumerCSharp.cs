@@ -9,6 +9,12 @@ namespace binary_viewer.Script
 {
     public class ScriptConsumerCSharp : IScriptConsumer
     {
+        private enum ErrorType
+        {
+            eCompiler
+            , eParser
+        }
+
         private static string mainEntryName = "Main";
 
         private string scriptText = string.Empty;
@@ -69,7 +75,7 @@ namespace binary_viewer.Script
 
                 foreach(CompilerError error in foundErrors)
                 {
-                    WriteNewError(error.ErrorText);
+                    WriteNewError($"{error.ErrorNumber}: \"{error.ErrorText}\". Line ({error.Line}), column ({error.Column})", ErrorType.eCompiler);
                 }
             }
             else
@@ -87,7 +93,7 @@ namespace binary_viewer.Script
                         }
                         else
                         {
-                            WriteNewError($"More than one \"{mainEntryName}\" was found in the file spec. You must only have 1.");
+                            WriteNewError($"More than one \"{mainEntryName}\" was found in the file spec. You must only have 1.", ErrorType.eParser);
                             break;
                         }
                     }
@@ -95,7 +101,7 @@ namespace binary_viewer.Script
 
                 if (typeToParse == null)
                 {
-                    WriteNewError($"No class called \"{mainEntryName}\" could be found. There must be at least 1 as the main entry point for the script.");
+                    WriteNewError($"No class called \"{mainEntryName}\" could be found. There must be at least 1 as the main entry point for the script.", ErrorType.eParser);
                 }
                 else if (!HasErrors)
                 {
@@ -164,36 +170,59 @@ namespace binary_viewer.Script
             // at a point in the future could possibly expand the types to be a general number of bytes/bits and we can keep track of how far threw
             // the file we are....but we don't do file streaming yet, so probably don't need anything capable of counting that high just yet.
 
-            OffsetPointerSpec nextPointer = null;
+            OffsetPointerSpec pointerHead = null; // points to the first pointer in a chain of pointers, so we can display the whole chain
+            OffsetPointerSpec nextPointer = null; // points to the newest pointer we've made in the chain
+
+
+
+
+            /*
+             restructure this into 1 big loop. We want pointers to arrays and arrays of pointers.
+             If there are no file attributes - skip the logic and add a simple type as normal.
+             Otherwise - loop through the attributes and build up a stack of pointers and arrays. Multi-dimensional arrays should 
+             be possible this way as we can have an array of arrays of something.
+             */
+
+
+
+
+
+
             for( int i = 0; i < fieldAttributes.Count; ++i)
             {
                 CustomAttributeData customAttribute = fieldAttributes[i];
 
                 if (customAttribute.AttributeType == typeof(BnPointer))
                 {
-                    if(customAttribute.ConstructorArguments.Count != 1)
-                    {
-                        // don't know if this is necessary! THe c# compiler should do this for us!
-                        WriteNewError( $"Custom attribute {customAttribute.ToString()} found with an incorrect number of arguments. There should only be 1 argument." );
-                        return;
-                    }
+//                      if(customAttribute.ConstructorArguments.Count <= 2)
+//                      {
+//                          // don't know if this is necessary! THe c# compiler should do this for us!
+//                          WriteNewError( $"Custom attribute {customAttribute.ToString()} found with an incorrect number of arguments. There should only be 1 argument.", ErrorType.eParser );
+//                          return;
+//                      }
 
                     PointerType pointerType = (PointerType)customAttribute.ConstructorArguments[0].Value;
 
                     switch (pointerType)
                     {
                         case PointerType.ePointer32:
+                            //calculate a new offset, using the current pointer value, if the pointer is already populated
+                            int fileOffsetToUse = nextPointer == null ? currentFileOffset : nextPointer.OffsetIntoFileOfTarget;
+                            OffsetPointerSpec newPointer = new OffsetPointerSpec(fileBuffer, fileOffsetToUse, 0);
+                            newPointer.Name = name;
 
+                            // add it to the "linked list" of pointers
+                            if (nextPointer == null)
+                            {
+                                pointerHead = newPointer; // save the first one for display
+                            }
+                            else
+                            {
+                                nextPointer.Target = newPointer;
+                            }
 
-                            //calculate a new offset (using the pointer value) if the pointer is already populated!
-
-
-
-
-                            nextPointer = new OffsetPointerSpec(fileBuffer, currentFileOffset, 0);
-                            nextPointer.Name = name;
-
-
+                            nextPointer = newPointer;
+                            
                             // only increment the file offset on the first pointer as any pointers to pointers are navigating the file manually
                             if (i == 0) { currentFileOffset += 4; }
                             break;
@@ -211,7 +240,7 @@ namespace binary_viewer.Script
                             break;*/
                         case PointerType.eNotAPointer:
                         default:
-                            WriteNewError($"Invalid pointer type: {pointerType}");
+                            WriteNewError($"Invalid pointer type: {pointerType}", ErrorType.eParser);
                             break;
                     }
                 }
@@ -268,7 +297,7 @@ namespace binary_viewer.Script
                 {
                     // if we're the child of a pointer, then don't update the file offset as it's already done
                     nextPointer.Target = value;
-                    listToAddTo.Add(nextPointer);
+                    listToAddTo.Add(pointerHead);
                 }
             }
         }
@@ -281,7 +310,7 @@ namespace binary_viewer.Script
             {
                 if(fieldAttributes.Count > 1)
                 {
-                    WriteNewError("There are too many attributes on a variable. You should only have a maximum of 1 array attribute on any member. Only the last one will be used.");
+                    WriteNewError("There are too many attributes on a variable. You should only have a maximum of 1 array attribute on any member. Only the last one will be used.", ErrorType.eParser);
                 }
 
                 foreach(CustomAttributeData attribute in fieldAttributes)
@@ -332,23 +361,26 @@ namespace binary_viewer.Script
                                         case Spec.ValueType.eDouble:
                                         default:
                                             // error, incompatible or unknown type
-                                            WriteNewError($"Attempting to use an incompatible value \'{valueSpec.Name}\' of type \'{valueSpec.TypeOfValue.ToString()}\' as an array length. Ensure type is an integer type");
+                                            WriteNewError($"Attempting to use an incompatible value \'{valueSpec.Name}\' of type \'{valueSpec.TypeOfValue.ToString()}\' as an array length. Ensure type is an integer type", ErrorType.eParser);
                                             break;
                                     }
+
+                                    // break out of of the loop as we're done
+                                    break;
                                 }
                             }
                         }
                         else
                         {
                             // the c# compiler should've caught this for us, but just in case it doesn't, add an error
-                            WriteNewError("Array attribute found with invalid constructor arguments.");
+                            WriteNewError("Array attribute found with invalid constructor arguments.", ErrorType.eParser);
                         }
                     }
                     else
                     {
                         // this is a catch all for when we add more attribute types, or if they try to use the build in C# ones
                         // they're only allowed to use our BnArray for arrays.
-                        WriteNewError($"An unknown or invalid attribute type \'{attribute.AttributeType}\' was found in the script.");
+                        WriteNewError($"An unknown or invalid attribute type \'{attribute.AttributeType}\' was found in the script.", ErrorType.eParser);
                     }
                 }
             }
@@ -356,10 +388,22 @@ namespace binary_viewer.Script
             return arrayLength;
         }
 
-        private void WriteNewError(string error)
+        private void WriteNewError(string error, ErrorType type)
         {
-            errorText += $"{error}\r\n";
-            errorsFound.Add(error);
+            string formattedError = string.Empty;
+            switch (type)
+            {
+                case ErrorType.eCompiler:
+                    formattedError = $"Compile Error: {error}\r\n";
+                    break;
+                case ErrorType.eParser:
+                default:
+                    formattedError = $"Parse Error: {error}\r\n";
+                    break;
+            }
+            
+            errorText += formattedError;
+            errorsFound.Add(formattedError);
         }
     }
 }
