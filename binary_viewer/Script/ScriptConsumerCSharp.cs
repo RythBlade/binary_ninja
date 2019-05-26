@@ -172,12 +172,12 @@ namespace binary_viewer.Script
 
                 if (customAttribute.AttributeType == typeof(BnPointer))
                 {
-                    if(customAttribute.ConstructorArguments.Count != 1)
-                    {
-                        // don't know if this is necessary! THe c# compiler should do this for us!
-                        WriteNewError( $"Custom attribute {customAttribute.ToString()} found with an incorrect number of arguments. There should only be 1 argument." );
-                        return;
-                    }
+//                     if(customAttribute.ConstructorArguments.Count <= 2)
+//                     {
+//                         // don't know if this is necessary! THe c# compiler should do this for us!
+//                         WriteNewError( $"Custom attribute {customAttribute.ToString()} found with an incorrect number of arguments. There should only be 1 argument." );
+//                         return;
+//                     }
 
                     PointerType pointerType = (PointerType)customAttribute.ConstructorArguments[0].Value;
 

@@ -455,6 +455,8 @@ namespace binary_viewer
                     fileDisplayPropertyGrid.SelectedObject = null;
                     scriptViewTextBox.Text = m_scriptBuffer;
                     hexGridView.DataBufferToDisplay = null;
+                    
+                    secondaryTabControl.SelectTab(consoleTabPage);
 
                     WriteMessageToErrorOutputWindow(parserPayload.ScriptConsumerToUse.ErrorOutput);
                 }
