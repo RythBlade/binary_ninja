@@ -173,6 +173,21 @@ namespace binary_viewer.Script
             OffsetPointerSpec pointerHead = null; // points to the first pointer in a chain of pointers, so we can display the whole chain
             OffsetPointerSpec nextPointer = null; // points to the newest pointer we've made in the chain
 
+
+
+
+            /*
+             restructure this into 1 big loop. We want pointers to arrays and arrays of pointers.
+             If there are no file attributes - skip the logic and add a simple type as normal.
+             Otherwise - loop through the attributes and build up a stack of pointers and arrays. Multi-dimensional arrays should 
+             be possible this way as we can have an array of arrays of something.
+             */
+
+
+
+
+
+
             for( int i = 0; i < fieldAttributes.Count; ++i)
             {
                 CustomAttributeData customAttribute = fieldAttributes[i];
