@@ -166,13 +166,13 @@ namespace binary_viewer
     [BnPointer( PointerType.eAddress32 )]
     public char m_firstCharPointer;
 
-    [BnPointer( PointerType.eAddress32, 0 )]
-    [BnPointer( PointerType.eAddress32, 1 )]
+    [BnPointer( PointerType.eAddress32)]
+    [BnPointer( PointerType.eAddress32)]
     public char m_firstCharPointerToPointer;
 
-    [BnPointer( PointerType.eAddress32, 2 )]
-    [BnPointer( PointerType.eAddress32, 1 )]
-    [BnPointer( PointerType.eAddress32, 0 )]
+    [BnPointer( PointerType.eAddress32)]
+    [BnPointer( PointerType.eAddress32)]
+    [BnPointer( PointerType.eAddress32)]
     public char m_firstCharPointerToPointerToPointer;
 
 	public int m_uintOne;             

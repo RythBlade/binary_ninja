@@ -170,6 +170,7 @@ namespace binary_viewer.Script
             // at a point in the future could possibly expand the types to be a general number of bytes/bits and we can keep track of how far threw
             // the file we are....but we don't do file streaming yet, so probably don't need anything capable of counting that high just yet.
 
+            OffsetPointerSpec pointerHead = null; // points to the first pointer in a chain of pointers, so we can display the whole chain
             OffsetPointerSpec nextPointer = null; // points to the newest pointer we've made in the chain
 
             for( int i = 0; i < fieldAttributes.Count; ++i)
@@ -196,7 +197,11 @@ namespace binary_viewer.Script
                             newPointer.Name = name;
 
                             // add it to the "linked list" of pointers
-                            if (nextPointer != null)
+                            if (nextPointer == null)
+                            {
+                                pointerHead = newPointer; // save the first one for display
+                            }
+                            else
                             {
                                 nextPointer.Target = newPointer;
                             }
@@ -277,7 +282,7 @@ namespace binary_viewer.Script
                 {
                     // if we're the child of a pointer, then don't update the file offset as it's already done
                     nextPointer.Target = value;
-                    listToAddTo.Add(nextPointer);
+                    listToAddTo.Add(pointerHead);
                 }
             }
         }

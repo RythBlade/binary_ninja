@@ -28,8 +28,4 @@ public class BnPointer : Attribute
         MyTestPointer<MyTestPointer<float>> anotherTest = null;
         */
     }
-
-    public BnPointer(PointerType type, int test)
-    {
-    }
 }
