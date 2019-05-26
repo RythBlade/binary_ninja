@@ -349,6 +349,9 @@ namespace binary_viewer.Script
                                             WriteNewError($"Attempting to use an incompatible value \'{valueSpec.Name}\' of type \'{valueSpec.TypeOfValue.ToString()}\' as an array length. Ensure type is an integer type", ErrorType.eParser);
                                             break;
                                     }
+
+                                    // break out of of the loop as we're done
+                                    break;
                                 }
                             }
                         }
