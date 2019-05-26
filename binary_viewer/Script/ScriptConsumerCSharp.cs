@@ -9,6 +9,12 @@ namespace binary_viewer.Script
 {
     public class ScriptConsumerCSharp : IScriptConsumer
     {
+        private enum ErrorType
+        {
+            eCompiler
+            , eParser
+        }
+
         private static string mainEntryName = "Main";
 
         private string scriptText = string.Empty;
@@ -69,7 +75,7 @@ namespace binary_viewer.Script
 
                 foreach(CompilerError error in foundErrors)
                 {
-                    WriteNewError(error.ErrorText);
+                    WriteNewError($"{error.ErrorNumber}: \"{error.ErrorText}\". Line ({error.Line}), column ({error.Column})", ErrorType.eCompiler);
                 }
             }
             else
@@ -87,7 +93,7 @@ namespace binary_viewer.Script
                         }
                         else
                         {
-                            WriteNewError($"More than one \"{mainEntryName}\" was found in the file spec. You must only have 1.");
+                            WriteNewError($"More than one \"{mainEntryName}\" was found in the file spec. You must only have 1.", ErrorType.eParser);
                             break;
                         }
                     }
@@ -95,7 +101,7 @@ namespace binary_viewer.Script
 
                 if (typeToParse == null)
                 {
-                    WriteNewError($"No class called \"{mainEntryName}\" could be found. There must be at least 1 as the main entry point for the script.");
+                    WriteNewError($"No class called \"{mainEntryName}\" could be found. There must be at least 1 as the main entry point for the script.", ErrorType.eParser);
                 }
                 else if (!HasErrors)
                 {
@@ -172,12 +178,12 @@ namespace binary_viewer.Script
 
                 if (customAttribute.AttributeType == typeof(BnPointer))
                 {
-//                     if(customAttribute.ConstructorArguments.Count <= 2)
-//                     {
-//                         // don't know if this is necessary! THe c# compiler should do this for us!
-//                         WriteNewError( $"Custom attribute {customAttribute.ToString()} found with an incorrect number of arguments. There should only be 1 argument." );
-//                         return;
-//                     }
+//                      if(customAttribute.ConstructorArguments.Count <= 2)
+//                      {
+//                          // don't know if this is necessary! THe c# compiler should do this for us!
+//                          WriteNewError( $"Custom attribute {customAttribute.ToString()} found with an incorrect number of arguments. There should only be 1 argument.", ErrorType.eParser );
+//                          return;
+//                      }
 
                     PointerType pointerType = (PointerType)customAttribute.ConstructorArguments[0].Value;
 
@@ -214,7 +220,7 @@ namespace binary_viewer.Script
                             break;*/
                         case PointerType.eNotAPointer:
                         default:
-                            WriteNewError($"Invalid pointer type: {pointerType}");
+                            WriteNewError($"Invalid pointer type: {pointerType}", ErrorType.eParser);
                             break;
                     }
                 }
@@ -284,7 +290,7 @@ namespace binary_viewer.Script
             {
                 if(fieldAttributes.Count > 1)
                 {
-                    WriteNewError("There are too many attributes on a variable. You should only have a maximum of 1 array attribute on any member. Only the last one will be used.");
+                    WriteNewError("There are too many attributes on a variable. You should only have a maximum of 1 array attribute on any member. Only the last one will be used.", ErrorType.eParser);
                 }
 
                 foreach(CustomAttributeData attribute in fieldAttributes)
@@ -335,7 +341,7 @@ namespace binary_viewer.Script
                                         case Spec.ValueType.eDouble:
                                         default:
                                             // error, incompatible or unknown type
-                                            WriteNewError($"Attempting to use an incompatible value \'{valueSpec.Name}\' of type \'{valueSpec.TypeOfValue.ToString()}\' as an array length. Ensure type is an integer type");
+                                            WriteNewError($"Attempting to use an incompatible value \'{valueSpec.Name}\' of type \'{valueSpec.TypeOfValue.ToString()}\' as an array length. Ensure type is an integer type", ErrorType.eParser);
                                             break;
                                     }
                                 }
@@ -344,14 +350,14 @@ namespace binary_viewer.Script
                         else
                         {
                             // the c# compiler should've caught this for us, but just in case it doesn't, add an error
-                            WriteNewError("Array attribute found with invalid constructor arguments.");
+                            WriteNewError("Array attribute found with invalid constructor arguments.", ErrorType.eParser);
                         }
                     }
                     else
                     {
                         // this is a catch all for when we add more attribute types, or if they try to use the build in C# ones
                         // they're only allowed to use our BnArray for arrays.
-                        WriteNewError($"An unknown or invalid attribute type \'{attribute.AttributeType}\' was found in the script.");
+                        WriteNewError($"An unknown or invalid attribute type \'{attribute.AttributeType}\' was found in the script.", ErrorType.eParser);
                     }
                 }
             }
@@ -359,10 +365,22 @@ namespace binary_viewer.Script
             return arrayLength;
         }
 
-        private void WriteNewError(string error)
+        private void WriteNewError(string error, ErrorType type)
         {
-            errorText += $"{error}\r\n";
-            errorsFound.Add(error);
+            string formattedError = string.Empty;
+            switch (type)
+            {
+                case ErrorType.eCompiler:
+                    formattedError = $"Compile Error: {error}\r\n";
+                    break;
+                case ErrorType.eParser:
+                default:
+                    formattedError = $"Parse Error: {error}\r\n";
+                    break;
+            }
+            
+            errorText += formattedError;
+            errorsFound.Add(formattedError);
         }
     }
 }
